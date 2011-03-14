@@ -1,11 +1,11 @@
-﻿namespace KernelHotkey
-{
-    using Microsoft.Win32.SafeHandles;
-    using System;
-    using System.IO;
-    using System.Runtime.InteropServices;
-    using System.Threading;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 
+namespace low_level_sendkeys.KernelHotkey
+{
     public class Mouse : Device
     {
         public Mouse(int id)

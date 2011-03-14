@@ -1,11 +1,11 @@
-﻿namespace KernelHotkey
-{
-    using Microsoft.Win32.SafeHandles;
-    using System;
-    using System.IO;
-    using System.Runtime.InteropServices;
-    using System.Threading;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 
+namespace low_level_sendkeys.KernelHotkey
+{
     public class Keyboard : Device
     {
         public Keyboard(int id)
@@ -48,7 +48,7 @@
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", EntryPoint="DeviceIoControl", CharSet=CharSet.Auto, SetLastError=true)]
         private static extern bool RawWrite(SafeFileHandle Device, uint IoControlCode, ref KEYBOARD_INPUT_DATA InBuffer, uint InBufferSize, IntPtr OutBuffer, uint OutBufferSize, out uint BytesReturned, IntPtr Overlapped);
-        public Stroke Read()
+        public KeyStroke Read()
         {
             KEYBOARD_INPUT_DATA outBuffer = new KEYBOARD_INPUT_DATA();
             uint bytesReturned = 0;
@@ -56,23 +56,23 @@
             RawRead(base.device, 0x222100, IntPtr.Zero, 0, out outBuffer, outBufferSize, out bytesReturned, IntPtr.Zero);
             if (bytesReturned > 0)
             {
-                Stroke stroke = new Stroke();
-                stroke.code = outBuffer.MakeCode;
-                stroke.state = (States) outBuffer.Flags;
-                stroke.information = outBuffer.ExtraInformation;
-                return stroke;
+                KeyStroke keyStroke = new KeyStroke();
+                keyStroke.code = outBuffer.MakeCode;
+                keyStroke.state = (States) outBuffer.Flags;
+                keyStroke.information = outBuffer.ExtraInformation;
+                return keyStroke;
             }
             return null;
         }
 
-        public uint Read(Stroke[] strokes)
+        public uint Read(KeyStroke[] keyStrokes)
         {
-            return this.Read(strokes, strokes.Length);
+            return this.Read(keyStrokes, keyStrokes.Length);
         }
 
-        public uint Read(Stroke[] strokes, int number)
+        public uint Read(KeyStroke[] keyStrokes, int number)
         {
-            if ((number <= 0) || (strokes.Length < number))
+            if ((number <= 0) || (keyStrokes.Length < number))
             {
                 return 0;
             }
@@ -83,9 +83,9 @@
             bytesReturned /= num2;
             for (int i = 0; i < bytesReturned; i++)
             {
-                strokes[i].code = outBuffer[i].MakeCode;
-                strokes[i].state = (States) outBuffer[i].Flags;
-                strokes[i].information = outBuffer[i].ExtraInformation;
+                keyStrokes[i].code = outBuffer[i].MakeCode;
+                keyStrokes[i].state = (States) outBuffer[i].Flags;
+                keyStrokes[i].information = outBuffer[i].ExtraInformation;
             }
             return bytesReturned;
         }
@@ -162,28 +162,28 @@
             return (Keyboard) Device.Wait(keyboards, timeout, exitContext);
         }
 
-        public bool Write(Stroke stroke)
+        public bool Write(KeyStroke keyStroke)
         {
             KEYBOARD_INPUT_DATA inBuffer = new KEYBOARD_INPUT_DATA();
             uint bytesReturned = 0;
             uint inBufferSize = (uint) Marshal.SizeOf(typeof(KEYBOARD_INPUT_DATA));
             inBuffer.UnitId = 0;
-            inBuffer.MakeCode = stroke.code;
-            inBuffer.Flags = (ushort) stroke.state;
+            inBuffer.MakeCode = keyStroke.code;
+            inBuffer.Flags = (ushort) keyStroke.state;
             inBuffer.Reserved = 0;
-            inBuffer.ExtraInformation = stroke.information;
+            inBuffer.ExtraInformation = keyStroke.information;
             RawWrite(base.device, 0x222080, ref inBuffer, inBufferSize, IntPtr.Zero, 0, out bytesReturned, IntPtr.Zero);
             return (bytesReturned > 0);
         }
 
-        public uint Write(Stroke[] strokes)
+        public uint Write(KeyStroke[] keyStrokes)
         {
-            return this.Write(strokes, strokes.Length);
+            return this.Write(keyStrokes, keyStrokes.Length);
         }
 
-        public uint Write(Stroke[] strokes, int number)
+        public uint Write(KeyStroke[] keyStrokes, int number)
         {
-            if ((number <= 0) || (strokes.Length < number))
+            if ((number <= 0) || (keyStrokes.Length < number))
             {
                 return 0;
             }
@@ -193,10 +193,10 @@
             for (int i = 0; i < number; i++)
             {
                 inBuffer[i].UnitId = 0;
-                inBuffer[i].MakeCode = strokes[i].code;
-                inBuffer[i].Flags = (ushort) strokes[i].state;
+                inBuffer[i].MakeCode = keyStrokes[i].code;
+                inBuffer[i].Flags = (ushort) keyStrokes[i].state;
                 inBuffer[i].Reserved = 0;
-                inBuffer[i].ExtraInformation = strokes[i].information;
+                inBuffer[i].ExtraInformation = keyStrokes[i].information;
             }
             RawWrite(base.device, 0x222080, inBuffer, (uint) (number * num2), IntPtr.Zero, 0, out bytesReturned, IntPtr.Zero);
             return (bytesReturned / num2);
@@ -252,13 +252,6 @@
             TERMSRV_SET_LED = 8,
             TERMSRV_SHADOW = 0x10,
             TERMSRV_VKPACKET = 0x20
-        }
-
-        public class Stroke
-        {
-            public ushort code;
-            public uint information;
-            public Keyboard.States state;
         }
     }
 }
