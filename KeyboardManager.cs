@@ -12,7 +12,7 @@ namespace low_level_sendkeys
     internal static class KeyboardManager
     {
         public delegate void KeyStrokeReceivedEventHandler(KeystrokeReceivedEventArgs e);
-        private static event KeyStrokeReceivedEventHandler KeyStrokeReceivedEvent;
+        public static event KeyStrokeReceivedEventHandler KeyStrokeReceivedEvent;
 
         private static Keyboard[] keyboards;
 
