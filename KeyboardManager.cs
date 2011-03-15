@@ -13,13 +13,13 @@ namespace low_level_sendkeys
         public static extern short GetKeyState(int keyCode);
 
         public delegate void KeyStrokeReceivedEventHandler(KeystrokeReceivedEventArgs e);
-        public  event KeyStrokeReceivedEventHandler KeyStrokeReceivedEvent;
+        public event KeyStrokeReceivedEventHandler KeyStrokeReceivedEvent;
 
         private KeystrokeReceivedEventArgs _eventArgs = new KeystrokeReceivedEventArgs();
 
-        private  Keyboard[] keyboards;
-        public  bool KeyboardListening { get; private set; }
-        private  Thread _threadKeyboardListen;
+        private Keyboard[] keyboards;
+        public bool KeyboardListening { get; private set; }
+        private Thread _threadKeyboardListen;
 
         public KeyboardManager()
         {
@@ -72,7 +72,7 @@ namespace low_level_sendkeys
             Keyboard kbd;
             KeyStroke keystroke;
 
-            
+
             while (KeyboardListening)
             {
                 kbd = Keyboard.Wait(keyboards);
@@ -83,7 +83,7 @@ namespace low_level_sendkeys
                 //Console.WriteLine("Code: 0x{0}, Information: {1}, State: {2}\n", keystroke.code.ToString("X"), keystroke.information, keystroke.state);
                 _eventArgs.KeyBoardNumber = kbd.ID;
                 _eventArgs.KeyStroke = keystroke;
-                    
+
                 if (KeyStrokeReceivedEvent != null) KeyStrokeReceivedEvent(_eventArgs);
 
                 if (_eventArgs.Handled)
@@ -129,8 +129,15 @@ namespace low_level_sendkeys
 
         public void SendKeystroke(KeyStroke keyStroke, int keyboardNumber)
         {
-            Console.WriteLine("Enviei keystroke: {0}", keyStroke.ToString());
-            keyboards[keyboardNumber].Write(keyStroke);
+            //for (int i = 0; i < 10; i++)
+            //{
+            //Console.WriteLine("Enviei keystroke: {0}, id {1}, OK: {2}", keyStroke.ToString(),i, keyboards[i].Write(keyStroke));
+                
+            //}
+
+            Console.WriteLine("Enviei keystroke: {0}, id {1}, OK: {2}", keyStroke.ToString(), keyboardNumber, keyboards[keyboardNumber].Write(keyStroke));
+
+
         }
 
     }
