@@ -5,15 +5,22 @@ namespace low_level_sendkeys
 {
     public class KeystrokeReceivedEventArgs
     {
-        public int KeyBoardNumber { get; private set; }
-        public List<KeyStroke> KeyboardStrokes { get; private set; }
+        public int KeyBoardNumber { get; internal set; }
+        public KeyStroke KeyStroke { get; internal set; }
+
+        public List<KeyStroke> ReturnedKeystrokes { get; internal set; }
         public bool Handled { get; set; }
 
-        internal KeystrokeReceivedEventArgs(int keyboardNum, KeyStroke keyStroke)
+        internal KeystrokeReceivedEventArgs()
         {
-            KeyBoardNumber = keyboardNum;
-            KeyboardStrokes = new List<KeyStroke>(new[] { keyStroke });
+            ReturnedKeystrokes = new List<KeyStroke>();
         }
+
+        //internal KeystrokeReceivedEventArgs(int keyboardNum, KeyStroke keyStroke)
+        //{
+        //    KeyBoardNumber = keyboardNum;
+        //    ReturnedKeystrokes = new List<KeyStroke>(new[] { keyStroke });
+        //}
 
     }
 }

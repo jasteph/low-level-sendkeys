@@ -202,6 +202,11 @@ namespace low_level_sendkeys.KernelHotkey
             return (bytesReturned / num2);
         }
 
+        public void FreeResources()
+        {
+            if (!device.IsClosed) device.Close();
+        }
+
         public Filters Filter
         {
             get

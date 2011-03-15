@@ -36,9 +36,14 @@ namespace low_level_sendkeys
                 }
                 else
                 {
-                    var newKey = new Key(inputKeyName.KeyName.Text);
-                    KeyboardManager.Keys.Add(newKey);
-                    AddOrUpdateKeyNode(newKey);
+
+                    var configureKeyDialog = new MapKey();
+                    var newKey = configureKeyDialog.ShowDialog(this, inputKeyName.KeyName.Text);
+                    if (newKey != null)
+                    {
+                        KeyboardManager.Keys.Add(newKey);
+                        AddOrUpdateKeyNode(newKey);
+                    }
                 }
             }
         }

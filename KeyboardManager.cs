@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using low_level_sendkeys.KernelHotkey;
@@ -15,41 +10,40 @@ using low_level_sendkeys.Keys;
 namespace low_level_sendkeys
 {
 
-    internal static class KeyboardManager
+    internal class KeyboardManager
     {
         public delegate void KeyStrokeReceivedEventHandler(KeystrokeReceivedEventArgs e);
-        public static event KeyStrokeReceivedEventHandler KeyStrokeReceivedEvent;
+        public  event KeyStrokeReceivedEventHandler KeyStrokeReceivedEvent;
 
-        private static Keyboard[] keyboards;
+        private KeystrokeReceivedEventArgs _eventArgs = new KeystrokeReceivedEventArgs();
 
-        public static bool KeyboardListening { get; private set; }
+        private  Keyboard[] keyboards;
+        public  bool KeyboardListening { get; private set; }
+        private  Thread _threadKeyboardListen;
+        public static KeysList Keys = new KeysList();
 
-        private static Thread _threadKeyboardListen;
-
-        public static Keys.KeysList Keys = new KeysList();
-
-        static KeyboardManager()
+        public KeyboardManager()
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
 
             keyboards = new Keyboard[10];
+        }
+
+        public void ListenKeyBoard()
+        {
+            if (KeyboardListening || KeyStrokeReceivedEvent == null) return;
 
             for (int i = 0; i < 10; i++)
             {
                 keyboards[i] = new Keyboard(i);
                 keyboards[i].Filter = Keyboard.Filters.ALL;//Keyboard.Filters.MAKE | Keyboard.Filters.BREAK; // filtering only key-down and key-up
             }
-        }
-
-        public static void ListenKeyBoard()
-        {
-            if (KeyboardListening || KeyStrokeReceivedEvent == null) return;
 
             _threadKeyboardListen = new Thread(ListenKeyBoardExecute);
             _threadKeyboardListen.Start();
         }
 
-        public static void StopListenKeyBoard()
+        public void StopListenKeyBoard()
         {
             if (!KeyboardListening) return;
 
@@ -64,9 +58,15 @@ namespace low_level_sendkeys
             {
                 _threadKeyboardListen.Abort();
             }
+
+            for (int i = 0; i < 10; i++)
+            {
+                keyboards[i].FreeResources();
+                keyboards[i] = null;
+            }
         }
 
-        public static void ListenKeyBoardExecute()
+        public void ListenKeyBoardExecute()
         {
             KeyboardListening = true;
 
@@ -81,13 +81,16 @@ namespace low_level_sendkeys
                 keystroke = kbd.Read();
 
                 //Console.WriteLine("Code: 0x{0}, Information: {1}, State: {2}\n", keystroke.code.ToString("X"), keystroke.information, keystroke.state);
-                var eventArgs = new KeystrokeReceivedEventArgs(kbd.ID, keystroke);
-                KeyStrokeReceivedEvent(eventArgs);
+                _eventArgs.KeyBoardNumber = kbd.ID;
+                _eventArgs.KeyStroke = keystroke;
+                    
+                KeyStrokeReceivedEvent(_eventArgs);
 
-                if (eventArgs.Handled)
+                if (_eventArgs.Handled)
                 {
                     Keyboard localKbd = kbd;
-                    eventArgs.KeyboardStrokes.ForEach(ks => localKbd.Write(ks));
+                    _eventArgs.ReturnedKeystrokes.ForEach(ks => localKbd.Write(ks));
+                    _eventArgs.ReturnedKeystrokes.Clear();
                 }
                 else
                 {
@@ -111,7 +114,7 @@ namespace low_level_sendkeys
             }
         }
 
-        private static string GetDefaultKeysFileName()
+        private string GetDefaultKeysFileName()
         {
             string assemblyName = Assembly.GetExecutingAssembly().Location;
 
@@ -122,11 +125,11 @@ namespace low_level_sendkeys
 
         }
 
-        public static void SaveKeyListToDisk()
+        public void SaveKeyListToDisk()
         {
             SaveKeyListToDisk(GetDefaultKeysFileName());
         }
-        public static void SaveKeyListToDisk(string fullPath)
+        public void SaveKeyListToDisk(string fullPath)
         {
             using (var w = new StreamWriter(fullPath))
             {
@@ -136,11 +139,11 @@ namespace low_level_sendkeys
             }
         }
 
-        public static void LoadKeyListFromDisk()
+        public void LoadKeyListFromDisk()
         {
             LoadKeyListFromDisk(GetDefaultKeysFileName());
         }
-        public static void LoadKeyListFromDisk(string fullPath)
+        public void LoadKeyListFromDisk(string fullPath)
         {
             if (File.Exists(fullPath))
             {

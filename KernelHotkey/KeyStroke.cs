@@ -57,10 +57,10 @@ namespace low_level_sendkeys.KernelHotkey
             sb.Append(", Infomation: " + information);
             sb.Append(", State: ");
 
+            if (state == Keyboard.States.MAKE) sb.Append("MAKE, "); 
             if ((state & Keyboard.States.BREAK) == Keyboard.States.BREAK) sb.Append("BREAK, "); 
             if ((state & Keyboard.States.E0) == Keyboard.States.E0) sb.Append("E0, "); 
             if ((state & Keyboard.States.E1) == Keyboard.States.E1) sb.Append("E1, "); 
-            if ((state & Keyboard.States.MAKE) == Keyboard.States.MAKE) sb.Append("MAKE, "); 
             if ((state & Keyboard.States.TERMSRV_SET_LED) == Keyboard.States.TERMSRV_SET_LED) sb.Append("TERMSRV_SET_LED, "); 
             if ((state & Keyboard.States.TERMSRV_SHADOW) == Keyboard.States.TERMSRV_SHADOW) sb.Append("TERMSRV_SHADOW, "); 
             if ((state & Keyboard.States.TERMSRV_VKPACKET) == Keyboard.States.TERMSRV_VKPACKET) sb.Append("TERMSRV_VKPACKET, ");

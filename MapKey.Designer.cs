@@ -31,11 +31,11 @@
             this.PressAndRelease = new System.Windows.Forms.Label();
             this.RepeatCommand = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.keyDownCommands = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.keyUpCommands = new System.Windows.Forms.TextBox();
             this.AcceptCommand = new System.Windows.Forms.Button();
             this.CancelCommand = new System.Windows.Forms.Button();
-            this.keyDownCommands = new System.Windows.Forms.TextBox();
-            this.keyUpCommands = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -76,6 +76,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "KeyDown Commands";
             // 
+            // keyDownCommands
+            // 
+            this.keyDownCommands.Location = new System.Drawing.Point(7, 20);
+            this.keyDownCommands.Multiline = true;
+            this.keyDownCommands.Name = "keyDownCommands";
+            this.keyDownCommands.ReadOnly = true;
+            this.keyDownCommands.Size = new System.Drawing.Size(179, 150);
+            this.keyDownCommands.TabIndex = 0;
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.keyUpCommands);
@@ -86,6 +95,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "KeyUp Commands";
             // 
+            // keyUpCommands
+            // 
+            this.keyUpCommands.Location = new System.Drawing.Point(6, 19);
+            this.keyUpCommands.Multiline = true;
+            this.keyUpCommands.Name = "keyUpCommands";
+            this.keyUpCommands.ReadOnly = true;
+            this.keyUpCommands.Size = new System.Drawing.Size(179, 150);
+            this.keyUpCommands.TabIndex = 1;
+            // 
             // AcceptCommand
             // 
             this.AcceptCommand.Enabled = false;
@@ -95,6 +113,7 @@
             this.AcceptCommand.TabIndex = 4;
             this.AcceptCommand.Text = "&Accept";
             this.AcceptCommand.UseVisualStyleBackColor = true;
+            this.AcceptCommand.Click += new System.EventHandler(this.AcceptCommand_Click);
             // 
             // CancelCommand
             // 
@@ -105,24 +124,7 @@
             this.CancelCommand.TabIndex = 5;
             this.CancelCommand.Text = "&Cancel";
             this.CancelCommand.UseVisualStyleBackColor = true;
-            // 
-            // keyDownCommands
-            // 
-            this.keyDownCommands.Location = new System.Drawing.Point(7, 20);
-            this.keyDownCommands.Multiline = true;
-            this.keyDownCommands.Name = "keyDownCommands";
-            this.keyDownCommands.ReadOnly = true;
-            this.keyDownCommands.Size = new System.Drawing.Size(179, 150);
-            this.keyDownCommands.TabIndex = 0;
-            // 
-            // keyUpCommands
-            // 
-            this.keyUpCommands.Location = new System.Drawing.Point(6, 19);
-            this.keyUpCommands.Multiline = true;
-            this.keyUpCommands.Name = "keyUpCommands";
-            this.keyUpCommands.ReadOnly = true;
-            this.keyUpCommands.Size = new System.Drawing.Size(179, 150);
-            this.keyUpCommands.TabIndex = 1;
+            this.CancelCommand.Click += new System.EventHandler(this.CancelCommand_Click);
             // 
             // label1
             // 

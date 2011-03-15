@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using low_level_sendkeys.KernelHotkey;
 using low_level_sendkeys.Keys;
 using System.Diagnostics;
+using System.Threading;
 
 namespace low_level_sendkeys
 {
@@ -18,7 +19,10 @@ namespace low_level_sendkeys
         private readonly System.Timers.Timer _timerKeyUp;
         private bool timerRunnig;
 
-        public MapKey() 
+        private string _keyName;
+
+        private KeyboardManager _keyManager = new KeyboardManager();
+        public MapKey()
         {
             InitializeComponent();
 
@@ -33,6 +37,7 @@ namespace low_level_sendkeys
 
         private void MapKey_Load(object sender, EventArgs e)
         {
+            Thread.Sleep(300);
             StartMapKey();
         }
 
@@ -56,23 +61,23 @@ namespace low_level_sendkeys
 
             PressAndRelease.Visible = true;
 
-            _newKey = new Key("TESTE");
+            _newKey = new Key(_keyName);
 
-            KeyboardManager.KeyStrokeReceivedEvent += ListenKeyboard;
-            KeyboardManager.ListenKeyBoard();
+            _keyManager.KeyStrokeReceivedEvent += ListenKeyboard;
+            _keyManager.ListenKeyBoard();
         }
 
         private void FinishMapKey()
         {
-            KeyboardManager.StopListenKeyBoard();
-            KeyboardManager.KeyStrokeReceivedEvent -= ListenKeyboard;
+            _keyManager.StopListenKeyBoard();
+            _keyManager.KeyStrokeReceivedEvent -= ListenKeyboard;
 
             var stringBuilder = new StringBuilder();
-            _newKey.KeyDownStrokes.ForEach(k => stringBuilder.AppendLine(string.Format("Code: {0}, Info: {1}, State: {2}", k.code, k.information, k.state)));
+            _newKey.KeyDownStrokes.ForEach(k => stringBuilder.AppendLine(string.Format("Code: 0x{0}, Info: {1}, State: {2}", k.code.ToString("X"), k.information, k.state)));
             keyDownCommands.Text = stringBuilder.ToString();
 
             stringBuilder = new StringBuilder();
-            _newKey.KeyUpStrokes.ForEach(k => stringBuilder.AppendLine(string.Format("Code: {0}, Info: {1}, State: {2}", k.code, k.information, k.state)));
+            _newKey.KeyUpStrokes.ForEach(k => stringBuilder.AppendLine(string.Format("Code: 0x{0}, Info: {1}, State: {2}", k.code.ToString("X"), k.information, k.state)));
             keyUpCommands.Text = stringBuilder.ToString();
 
             AcceptCommand.Enabled = true;
@@ -85,32 +90,31 @@ namespace low_level_sendkeys
 
         private void ListenKeyboard(KeystrokeReceivedEventArgs e)
         {
-            foreach (var keyStroke in e.KeyboardStrokes)
+            KeyStroke keyStroke = e.KeyStroke;
+
+            Debug.WriteLine(string.Format("Code: 0x{0}, Info: {1}, State: {2}", keyStroke.code.ToString("X"), keyStroke.information, keyStroke.state));
+            
+            if ((keyStroke.state & Keyboard.States.BREAK) == Keyboard.States.BREAK)
             {
-                Debug.WriteLine(string.Format("Code: {0}, Info: {1}, State: {2}", keyStroke.code, keyStroke.information, keyStroke.state));
-
-                if ((keyStroke.state & Keyboard.States.BREAK) == Keyboard.States.BREAK)
+                if (!_newKey.KeyUpStrokes.Contains(keyStroke))
                 {
-                    if (!_newKey.KeyUpStrokes.Contains(keyStroke))
-                    {
-                        _newKey.KeyUpStrokes.Add(keyStroke);
-                        Debug.WriteLine("KEY UP");
-                    }
-
-                    if (!timerRunnig)
-                    {
-                        Debug.WriteLine("TIMER ACIONADO");
-                        timerRunnig = true;
-                        _timerKeyUp.Start();
-                    }
+                    _newKey.KeyUpStrokes.Add(keyStroke);
+                    Debug.WriteLine("KEY UP");
                 }
-                else
+
+                if (!timerRunnig)
                 {
-                    if (!_newKey.KeyDownStrokes.Contains(keyStroke))
-                    {
-                        _newKey.KeyDownStrokes.Add(keyStroke);
-                        Debug.WriteLine("KEY DOWN");
-                    }
+                    Debug.WriteLine("TIMER ACIONADO");
+                    timerRunnig = true;
+                    _timerKeyUp.Start();
+                }
+            }
+            else
+            {
+                if (!_newKey.KeyDownStrokes.Contains(keyStroke))
+                {
+                    _newKey.KeyDownStrokes.Add(keyStroke);
+                    Debug.WriteLine("KEY DOWN");
                 }
             }
         }
@@ -118,6 +122,30 @@ namespace low_level_sendkeys
         private void RepeatCommand_Click(object sender, EventArgs e)
         {
             StartMapKey();
+        }
+
+        public Key ShowDialog(IWin32Window owner, string KeyName)
+        {
+            _keyName = KeyName;
+
+            ShowDialog(owner);
+            if (DialogResult == DialogResult.OK)
+            {
+                return _newKey;
+            }
+            return null;
+        }
+
+        private void AcceptCommand_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void CancelCommand_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
     }
 }
