@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using low_level_sendkeys.KernelHotkey;
@@ -29,7 +30,7 @@ namespace low_level_sendkeys
 
         public void ListenKeyBoard()
         {
-            if (KeyboardListening || KeyStrokeReceivedEvent == null) return;
+            if (KeyboardListening) return;
 
             for (int i = 0; i < 10; i++)
             {
@@ -83,7 +84,7 @@ namespace low_level_sendkeys
                 _eventArgs.KeyBoardNumber = kbd.ID;
                 _eventArgs.KeyStroke = keystroke;
                     
-                KeyStrokeReceivedEvent(_eventArgs);
+                if (KeyStrokeReceivedEvent != null) KeyStrokeReceivedEvent(_eventArgs);
 
                 if (_eventArgs.Handled)
                 {
@@ -125,5 +126,12 @@ namespace low_level_sendkeys
         {
             return (((ushort)GetKeyState(0x91)) & 0xffff) != 0;
         }
+
+        public void SendKeystroke(KeyStroke keyStroke, int keyboardNumber)
+        {
+            Console.WriteLine("Enviei keystroke: {0}", keyStroke.ToString());
+            keyboards[keyboardNumber].Write(keyStroke);
+        }
+
     }
 }

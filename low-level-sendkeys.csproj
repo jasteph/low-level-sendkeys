@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SendRawKeys.cs" />
     <EmbeddedResource Include="InputKeyName.resx">
       <DependentUpon>InputKeyName.cs</DependentUpon>
     </EmbeddedResource>

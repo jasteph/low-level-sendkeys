@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using low_level_sendkeys.Keys;
 using low_level_sendkeys.Properties;
 using low_level_sendkeys.KernelHotkey;
+using System.Threading;
 
 namespace low_level_sendkeys
 {
@@ -18,7 +19,30 @@ namespace low_level_sendkeys
             EnableButtons();
         }
 
+
+        private void RemoveKeyCommand_Click(object sender, EventArgs e)
+        {
+            RemoveSelectedKey();
+        }
+
+        private void RemoveSelectedKey()
+        {
+            if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 0)
+            {
+                EnableButtons();
+                return;
+            }
+
+            KeyManager.Keys.Remove(KeyManager.Keys.Single(k => k.Name.Equals(treeKeys.SelectedNode.Name)));
+            treeKeys.Nodes.RemoveByKey(treeKeys.SelectedNode.Name);
+        }
+
         private void AddKeyCommand_Click(object sender, EventArgs e)
+        {
+            AddNewKey();
+        }
+
+        private void AddNewKey()
         {
             var inputKeyName = new InputKeyName();
             inputKeyName.ShowDialog(this);
@@ -94,7 +118,7 @@ namespace low_level_sendkeys
                              };
             treeUp.Expand();
 
-            for (int i = 0; i < key.KeyDownStrokes.Count; i++)
+            for (int i = 0; i < key.KeyUpStrokes.Count; i++)
             {
                 var treeKeyStroke = new TreeNode(key.KeyUpStrokes[i].ToString());
                 treeKeyStroke.Name = key.Name + "_Up" + i.ToString("00");
@@ -188,6 +212,11 @@ namespace low_level_sendkeys
 
         private void RenameKeyCommand_Click(object sender, EventArgs e)
         {
+            RenameSelectedKey();
+        }
+
+        private void RenameSelectedKey()
+        {
             if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 0)
             {
                 EnableButtons();
@@ -243,6 +272,11 @@ namespace low_level_sendkeys
 
         private void ChangeMakeCommand_Click(object sender, EventArgs e)
         {
+            ChangeSelectedMakeCommand();
+        }
+
+        private void ChangeSelectedMakeCommand()
+        {
             if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 2)
             {
                 EnableButtons();
@@ -263,7 +297,7 @@ namespace low_level_sendkeys
             {
                 ks = currentKey.KeyUpStrokes[codeIndex];
             }
-            
+
             var configureKeyCode = new MakeCodeDialog();
             configureKeyCode.KeyStroke = ks;
 
@@ -274,5 +308,135 @@ namespace low_level_sendkeys
                 treeKeys.SelectedNode.Text = configureKeyCode.KeyStroke.ToString();
             }
         }
+
+        private void AddMakeCommand_Click(object sender, EventArgs e)
+        {
+            AddMakeCommandToSelectedKey();
+        }
+
+        private void AddMakeCommandToSelectedKey()
+        {
+            if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 1)
+            {
+                EnableButtons();
+                return;
+            }
+
+            bool isPressed = treeKeys.SelectedNode.Text.Equals("Pressed");
+            string keyName = treeKeys.SelectedNode.Parent.Name;
+            Key currentKey = KeyManager.Keys.Single(k => k.Name.Equals(keyName));
+
+
+            var configureKeyCode = new MakeCodeDialog();
+            configureKeyCode.KeyStroke = new KeyStroke();
+
+            configureKeyCode.ShowDialog(this);
+
+            if (configureKeyCode.DialogResult == DialogResult.OK)
+            {
+
+                if (isPressed)
+                {
+                    currentKey.KeyDownStrokes.Add(configureKeyCode.KeyStroke.Clone());
+                }
+                else
+                {
+                    currentKey.KeyUpStrokes.Add(configureKeyCode.KeyStroke.Clone());
+                }
+                UpdateKeyNode(currentKey, currentKey.Name);
+            }
+        }
+
+        private void RemoveMakeCommand_Click(object sender, EventArgs e)
+        {
+            RemoveMakeCommandFromSelectedKey();
+        }
+
+        private void RemoveMakeCommandFromSelectedKey()
+        {
+            if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 2)
+            {
+                EnableButtons();
+                return;
+            }
+
+            int codeIndex = Convert.ToInt32(treeKeys.SelectedNode.Name.Substring(treeKeys.SelectedNode.Name.Length - 2, 2));
+            bool isPressed = treeKeys.SelectedNode.Parent.Text.Equals("Pressed");
+            string keyName = treeKeys.SelectedNode.Parent.Parent.Name;
+            Key currentKey = KeyManager.Keys.Single(k => k.Name.Equals(keyName));
+
+            if (isPressed)
+            {
+                currentKey.KeyDownStrokes.RemoveAt(codeIndex);
+            }
+            else
+            {
+                currentKey.KeyUpStrokes.RemoveAt(codeIndex);
+            }
+
+            UpdateKeyNode(currentKey, currentKey.Name);
+        }
+
+        private void treeKeys_DoubleClick(object sender, EventArgs e)
+        {
+            if (treeKeys.SelectedNode != null && treeKeys.SelectedNode.Level == 2)
+            {
+                ChangeSelectedMakeCommand();
+            }
+        }
+
+        private void treeKeys_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (treeKeys.SelectedNode == null) return;
+
+            if (e.KeyCode == System.Windows.Forms.Keys.F2)
+            {
+                switch (treeKeys.SelectedNode.Level)
+                {
+                    case 0:
+                        RenameSelectedKey();
+                        break;
+                    case 2:
+                        ChangeSelectedMakeCommand();
+                        break;
+                }
+            }
+            else if (e.KeyCode == System.Windows.Forms.Keys.Insert)
+            {
+                switch (treeKeys.SelectedNode.Level)
+                {
+                    case 0:
+                        AddNewKey();
+                        break;
+                    case 1:
+                        AddMakeCommandToSelectedKey();
+                        break;
+                }
+            }
+            else if (e.KeyCode == System.Windows.Forms.Keys.Delete)
+            {
+                switch (treeKeys.SelectedNode.Level)
+                {
+                    case 0:
+                        RemoveSelectedKey();
+                        break;
+                    case 2:
+                        RemoveMakeCommandFromSelectedKey();
+                        break;
+                }
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Thread.Sleep(int.Parse(StartTimeout.Text));
+            SendRawKeys.SendCommands(SendCommands.Text);
+        }
+
     }
 }
