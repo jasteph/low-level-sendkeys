@@ -18,7 +18,7 @@ namespace low_level_sendkeys
         private readonly System.Timers.Timer _timerKeyUp;
         private bool timerRunnig;
 
-        public MapKey()
+        public MapKey() 
         {
             InitializeComponent();
 
