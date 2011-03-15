@@ -66,6 +66,12 @@
     <Compile Include="KernelHotkey\Device.cs" />
     <Compile Include="KernelHotkey\Keyboard.cs" />
     <Compile Include="KernelHotkey\Mouse.cs" />
+    <Compile Include="MakeCodeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MakeCodeDialog.Designer.cs">
+      <DependentUpon>MakeCodeDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="MapKey.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +85,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MakeCodeDialog.resx">
+      <DependentUpon>MakeCodeDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MapKey.resx">
       <DependentUpon>MapKey.cs</DependentUpon>

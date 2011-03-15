@@ -8,7 +8,7 @@ namespace low_level_sendkeys.Keys
     [Serializable]
     public class Key : ISerializable
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public readonly List<KeyStroke> KeyDownStrokes;
         public readonly List<KeyStroke> KeyUpStrokes;
 

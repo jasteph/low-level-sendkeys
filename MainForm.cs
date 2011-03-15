@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using low_level_sendkeys.Keys;
 using low_level_sendkeys.Properties;
+using low_level_sendkeys.KernelHotkey;
 
 namespace low_level_sendkeys
 {
@@ -12,13 +13,9 @@ namespace low_level_sendkeys
         {
             InitializeComponent();
 
-            KeyManager.Keys.ForEach(k => AddOrUpdateKeyNode(k));
-        }
+            KeyManager.Keys.ForEach(AddKeyNode);
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var x = new MapKey();
-            x.ShowDialog(this);
+            EnableButtons();
         }
 
         private void AddKeyCommand_Click(object sender, EventArgs e)
@@ -33,34 +30,41 @@ namespace low_level_sendkeys
                 }
                 else
                 {
-
                     var configureKeyDialog = new MapKey();
                     var newKey = configureKeyDialog.ShowDialog(this, inputKeyName.KeyName.Text, true);
                     if (newKey != null)
                     {
                         KeyManager.Keys.Add(newKey);
-                        AddOrUpdateKeyNode(newKey);
+                        AddKeyNode(newKey);
                     }
                 }
             }
         }
 
-        private void AddOrUpdateKeyNode(Key key)
+        private void UpdateKeyNode(Key key, string oldKeyName)
         {
-            TreeNode treeNode = treeKeys.Nodes.OfType<TreeNode>().Where(k => k.Name.Equals(key.Name, StringComparison.CurrentCultureIgnoreCase)).SingleOrDefault();
-            if (treeNode == null)
-            {
-                treeNode = BuildNodeFromKey(key);
-                treeKeys.Nodes.Add(treeNode);
-            }
-            else
-            {
-                var oldIndex = treeNode.Index;
-                treeNode = BuildNodeFromKey(key);
-                treeKeys.Nodes.RemoveAt(oldIndex);
-                treeKeys.Nodes.Insert(oldIndex, treeNode);
-            }
+            TreeNode treeNode = treeKeys.Nodes.OfType<TreeNode>().Where(k => k.Name.Equals(oldKeyName, StringComparison.CurrentCultureIgnoreCase)).SingleOrDefault();
 
+            bool wasSelected = treeNode.IsSelected;
+            bool wasExpanded = treeNode.IsExpanded;
+
+            var oldIndex = treeNode.Index;
+            treeNode = BuildNodeFromKey(key);
+
+            if (wasExpanded) treeNode.Expand();
+
+            treeKeys.Nodes.RemoveAt(oldIndex);
+            treeKeys.Nodes.Insert(oldIndex, treeNode);
+            if (wasSelected)
+            {
+                treeKeys.SelectedNode = treeNode;
+            }
+        }
+
+        private void AddKeyNode(Key key)
+        {
+            TreeNode treeNode = BuildNodeFromKey(key);
+            treeKeys.Nodes.Add(treeNode);
         }
 
         private TreeNode BuildNodeFromKey(Key key)
@@ -127,9 +131,147 @@ namespace low_level_sendkeys
                 KeyManager.LoadKeyListFromDisk(x.FileName);
 
                 treeKeys.Nodes.Clear();
-                KeyManager.Keys.ForEach(k => AddOrUpdateKeyNode(k));
+                KeyManager.Keys.ForEach(AddKeyNode);
 
                 MessageBox.Show(this, Texts.KeysImported);
+            }
+        }
+
+        private void treeKeys_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            EnableButtons();
+        }
+
+        private void EnableButtons()
+        {
+            if (treeKeys.SelectedNode == null)
+            {
+                RemoveKeyCommand.Enabled = false;
+                UpdateKeyCommand.Enabled = false;
+                RenameKeyCommand.Enabled = false;
+            }
+            else
+            {
+                if (treeKeys.SelectedNode.Level == 0)
+                {
+                    RemoveKeyCommand.Enabled = true;
+                    UpdateKeyCommand.Enabled = true;
+                    RenameKeyCommand.Enabled = true;
+                }
+                else
+                {
+                    RemoveKeyCommand.Enabled = false;
+                    UpdateKeyCommand.Enabled = false;
+                    RenameKeyCommand.Enabled = false;
+                }
+
+                if (treeKeys.SelectedNode.Level == 1)
+                {
+                    AddMakeCommand.Enabled = true;
+                    RemoveMakeCommand.Enabled = false;
+                    ChangeMakeCommand.Enabled = false;
+                }
+                else if (treeKeys.SelectedNode.Level == 2)
+                {
+                    AddMakeCommand.Enabled = false;
+                    RemoveMakeCommand.Enabled = true;
+                    ChangeMakeCommand.Enabled = true;
+                }
+                else
+                {
+                    AddMakeCommand.Enabled = false;
+                    RemoveMakeCommand.Enabled = false;
+                    ChangeMakeCommand.Enabled = false;
+                }
+            }
+        }
+
+        private void RenameKeyCommand_Click(object sender, EventArgs e)
+        {
+            if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 0)
+            {
+                EnableButtons();
+                return;
+            }
+
+            string oldKeyName = treeKeys.SelectedNode.Name;
+
+            var inputKeyName = new InputKeyName();
+
+            inputKeyName.KeyName.Text = oldKeyName;
+
+            inputKeyName.ShowDialog(this);
+            string newKeyName = inputKeyName.KeyName.Text;
+
+            if (inputKeyName.DialogResult == DialogResult.OK && !string.IsNullOrEmpty(newKeyName) && newKeyName != oldKeyName)
+            {
+                if (KeyManager.Keys.Exists(k => k.Name.Equals(newKeyName, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    MessageBox.Show(string.Format("A key with a name '{0}' already exists.", newKeyName));
+                }
+                else
+                {
+                    var key = KeyManager.Keys.Single(k => k.Name.Equals(oldKeyName, StringComparison.InvariantCultureIgnoreCase));
+                    key.Name = newKeyName;
+
+                    UpdateKeyNode(key, oldKeyName);
+                }
+
+            }
+        }
+
+        private void UpdateKeyCommand_Click(object sender, EventArgs e)
+        {
+            if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 0)
+            {
+                EnableButtons();
+                return;
+            }
+
+            var configureKeyDialog = new MapKey();
+            var newKey = configureKeyDialog.ShowDialog(this, treeKeys.SelectedNode.Name, false);
+            if (newKey != null)
+            {
+                int index = KeyManager.Keys.IndexOf(KeyManager.Keys.Single(k => k.Name.Equals(treeKeys.SelectedNode.Name)));
+
+                KeyManager.Keys.RemoveAt(index);
+                KeyManager.Keys.Insert(index, newKey);
+                UpdateKeyNode(newKey, newKey.Name);
+            }
+
+        }
+
+        private void ChangeMakeCommand_Click(object sender, EventArgs e)
+        {
+            if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 2)
+            {
+                EnableButtons();
+                return;
+            }
+
+            int codeIndex = Convert.ToInt32(treeKeys.SelectedNode.Name.Substring(treeKeys.SelectedNode.Name.Length - 2, 2));
+            bool isPressed = treeKeys.SelectedNode.Parent.Text.Equals("Pressed");
+            string keyName = treeKeys.SelectedNode.Parent.Parent.Name;
+            Key currentKey = KeyManager.Keys.Single(k => k.Name.Equals(keyName));
+
+            KeyStroke ks;
+            if (isPressed)
+            {
+                ks = currentKey.KeyDownStrokes[codeIndex];
+            }
+            else
+            {
+                ks = currentKey.KeyUpStrokes[codeIndex];
+            }
+            
+            var configureKeyCode = new MakeCodeDialog();
+            configureKeyCode.KeyStroke = ks;
+
+            configureKeyCode.ShowDialog(this);
+
+            if (configureKeyCode.DialogResult == DialogResult.OK)
+            {
+                treeKeys.SelectedNode.Text = configureKeyCode.KeyStroke.ToString();
             }
         }
     }
