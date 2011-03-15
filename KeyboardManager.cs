@@ -1,17 +1,16 @@
 ﻿using System.Diagnostics;
-using System.IO;
-using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
-using System.Xml;
-using System.Xml.Serialization;
 using low_level_sendkeys.KernelHotkey;
-using low_level_sendkeys.Keys;
 
 namespace low_level_sendkeys
 {
 
     internal class KeyboardManager
     {
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        public static extern short GetKeyState(int keyCode);
+
         public delegate void KeyStrokeReceivedEventHandler(KeystrokeReceivedEventArgs e);
         public  event KeyStrokeReceivedEventHandler KeyStrokeReceivedEvent;
 
@@ -20,7 +19,6 @@ namespace low_level_sendkeys
         private  Keyboard[] keyboards;
         public  bool KeyboardListening { get; private set; }
         private  Thread _threadKeyboardListen;
-        public static KeysList Keys = new KeysList();
 
         public KeyboardManager()
         {
@@ -73,6 +71,7 @@ namespace low_level_sendkeys
             Keyboard kbd;
             KeyStroke keystroke;
 
+            
             while (KeyboardListening)
             {
                 kbd = Keyboard.Wait(keyboards);
@@ -114,53 +113,17 @@ namespace low_level_sendkeys
             }
         }
 
-        private string GetDefaultKeysFileName()
+        public static bool NumLockOn()
         {
-            string assemblyName = Assembly.GetExecutingAssembly().Location;
-
-            string fullPath = Path.GetDirectoryName(assemblyName);
-            string fileName = Path.GetFileNameWithoutExtension(assemblyName);
-
-            return Path.Combine(fullPath, fileName + ".keys");
-
+            return (((ushort)GetKeyState(0x90)) & 0xffff) != 0;
         }
-
-        public void SaveKeyListToDisk()
+        public static bool CapsLockOn()
         {
-            SaveKeyListToDisk(GetDefaultKeysFileName());
+            return (((ushort)GetKeyState(0x14)) & 0xffff) != 0;
         }
-        public void SaveKeyListToDisk(string fullPath)
+        public static bool ScrollLockOn()
         {
-            using (var w = new StreamWriter(fullPath))
-            {
-                var s = new XmlSerializer(Keys.GetType());
-                s.Serialize(w, Keys);
-                w.Close();
-            }
-        }
-
-        public void LoadKeyListFromDisk()
-        {
-            LoadKeyListFromDisk(GetDefaultKeysFileName());
-        }
-        public void LoadKeyListFromDisk(string fullPath)
-        {
-            if (File.Exists(fullPath))
-            {
-                using (var sr = new StreamReader(fullPath))
-                {
-                    using (var xr = new XmlTextReader(sr))
-                    {
-                        var xs = new XmlSerializer(Keys.GetType());
-                        if (xs.CanDeserialize(xr))
-                        {
-                            Keys = (KeysList)xs.Deserialize(xr);
-                        }
-                        xr.Close();
-                    }
-                    sr.Close();
-                }
-            }
+            return (((ushort)GetKeyState(0x91)) & 0xffff) != 0;
         }
     }
 }

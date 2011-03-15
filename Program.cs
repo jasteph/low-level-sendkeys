@@ -26,6 +26,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32.SafeHandles;
 using System.Diagnostics;
+using low_level_sendkeys.Keys;
 
 namespace low_level_sendkeys
 {
@@ -55,13 +56,13 @@ namespace low_level_sendkeys
 
             if (!NoGui)
             {
-                //KeyboardManager.LoadKeyListFromDisk();
+                KeyManager.LoadKeyListFromDisk();
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new MainForm());
 
-                //KeyboardManager.SaveKeyListToDisk();
+                KeyManager.SaveKeyListToDisk();
                 
                 Application.Exit();
             }

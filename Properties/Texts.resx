@@ -117,4 +117,10 @@
 	<data name="KeyNameAlreadyExists">
 		<value xml:space="preserve">A key with this name is already defined.</value>
 	</data>
+	<data name="KeysExported">
+		<value xml:space="preserve">Keys exported to disk sucefully</value>
+	</data>
+	<data name="KeysImported">
+		<value xml:space="preserve">Keys Imported sucefully</value>
+	</data>
 </root>

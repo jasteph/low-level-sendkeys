@@ -15,6 +15,7 @@ namespace low_level_sendkeys
 {
     public partial class MapKey : Form
     {
+        private bool _autoClose;
         private Key _newKey;
         private readonly System.Timers.Timer _timerKeyUp;
         private bool timerRunnig;
@@ -86,6 +87,12 @@ namespace low_level_sendkeys
 
             PressAndRelease.Visible = false;
 
+            if (_autoClose)
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+
         }
 
         private void ListenKeyboard(KeystrokeReceivedEventArgs e)
@@ -124,9 +131,10 @@ namespace low_level_sendkeys
             StartMapKey();
         }
 
-        public Key ShowDialog(IWin32Window owner, string KeyName)
+        public Key ShowDialog(IWin32Window owner, string KeyName, Boolean AutoClose)
         {
             _keyName = KeyName;
+            _autoClose = AutoClose;
 
             ShowDialog(owner);
             if (DialogResult == DialogResult.OK)

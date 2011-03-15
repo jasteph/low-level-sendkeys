@@ -68,5 +68,23 @@ namespace low_level_sendkeys.Properties {
                 return ResourceManager.GetString("KeyNameAlreadyExists", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keys exported to disk sucefully.
+        /// </summary>
+        internal static string KeysExported {
+            get {
+                return ResourceManager.GetString("KeysExported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keys Imported sucefully.
+        /// </summary>
+        internal static string KeysImported {
+            get {
+                return ResourceManager.GetString("KeysImported", resourceCulture);
+            }
+        }
     }
 }

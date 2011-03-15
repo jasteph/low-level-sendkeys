@@ -54,6 +54,7 @@
     <Compile Include="KernelHotkey\KeyStroke.cs" />
     <Compile Include="Keys\Key.cs" />
     <Compile Include="KeyboardManager.cs" />
+    <Compile Include="Keys\KeyManager.cs" />
     <Compile Include="Keys\KeysList.cs" />
     <Compile Include="KeystrokeReceivedEventArgs.cs" />
     <Compile Include="MainForm.cs">
