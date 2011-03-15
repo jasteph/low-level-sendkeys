@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 using low_level_sendkeys.KernelHotkey;
+using low_level_sendkeys.Keys;
 
 namespace low_level_sendkeys
 {
@@ -19,6 +25,8 @@ namespace low_level_sendkeys
         public static bool KeyboardListening { get; private set; }
 
         private static Thread _threadKeyboardListen;
+
+        public static Keys.KeysList Keys = new KeysList();
 
         static KeyboardManager()
         {
@@ -100,7 +108,55 @@ namespace low_level_sendkeys
                 //{
                 //    kbd.Write(keystroke);
                 //}
+            }
+        }
 
+        private static string GetDefaultKeysFileName()
+        {
+            string assemblyName = Assembly.GetExecutingAssembly().Location;
+
+            string fullPath = Path.GetDirectoryName(assemblyName);
+            string fileName = Path.GetFileNameWithoutExtension(assemblyName);
+
+            return Path.Combine(fullPath, fileName + ".keys");
+
+        }
+
+        public static void SaveKeyListToDisk()
+        {
+            SaveKeyListToDisk(GetDefaultKeysFileName());
+        }
+        public static void SaveKeyListToDisk(string fullPath)
+        {
+            using (var w = new StreamWriter(fullPath))
+            {
+                var s = new XmlSerializer(Keys.GetType());
+                s.Serialize(w, Keys);
+                w.Close();
+            }
+        }
+
+        public static void LoadKeyListFromDisk()
+        {
+            LoadKeyListFromDisk(GetDefaultKeysFileName());
+        }
+        public static void LoadKeyListFromDisk(string fullPath)
+        {
+            if (File.Exists(fullPath))
+            {
+                using (var sr = new StreamReader(fullPath))
+                {
+                    using (var xr = new XmlTextReader(sr))
+                    {
+                        var xs = new XmlSerializer(Keys.GetType());
+                        if (xs.CanDeserialize(xr))
+                        {
+                            Keys = (KeysList)xs.Deserialize(xr);
+                        }
+                        xr.Close();
+                    }
+                    sr.Close();
+                }
             }
         }
     }

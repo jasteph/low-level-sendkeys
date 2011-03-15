@@ -6,7 +6,7 @@ using low_level_sendkeys.KernelHotkey;
 namespace low_level_sendkeys.Keys
 {
     [Serializable]
-    internal class Key : ISerializable
+    public class Key : ISerializable
     {
         public string Name { get; private set; }
         public readonly List<KeyStroke> KeyDownStrokes;

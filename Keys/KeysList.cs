@@ -5,10 +5,14 @@ using System.Runtime.Serialization;
 namespace low_level_sendkeys.Keys
 {
     [Serializable]
-    internal class KeysList:List<Key>,ISerializable
+    public class KeysList:List<Key>,ISerializable
     {
-
-        private KeysList(SerializationInfo info, StreamingContext context)
+        public KeysList(){}
+        public KeysList(IEnumerable<Key> initialList)
+        {
+            this.AddRange(initialList);
+        }
+        public KeysList(SerializationInfo info, StreamingContext context)
         {
             int totalKeyUp = info.GetInt32("TotalItens");
             for (int i = 0; i < totalKeyUp; i++)

@@ -55,10 +55,14 @@ namespace low_level_sendkeys
 
             if (!NoGui)
             {
+                //KeyboardManager.LoadKeyListFromDisk();
+
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new MainForm());
 
+                //KeyboardManager.SaveKeyListToDisk();
+                
                 Application.Exit();
             }
             else
