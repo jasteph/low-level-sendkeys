@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using low_level_sendkeys.Comunnication;
 using Microsoft.Win32.SafeHandles;
 using System.Diagnostics;
 using low_level_sendkeys.Keys;
@@ -60,10 +61,14 @@ namespace low_level_sendkeys
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+
+                SocketConnection.StartSocketServer();
+
                 Application.Run(new MainForm());
 
                 KeyManager.SaveKeyListToDisk();
                 
+                SocketConnection.StopSocketServer();
                 Application.Exit();
             }
             else

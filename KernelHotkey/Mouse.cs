@@ -23,7 +23,7 @@ namespace low_level_sendkeys.KernelHotkey
             }
             base.unempty = new ManualResetEvent(false);
             IntPtr handle = base.unempty.SafeWaitHandle.DangerousGetHandle();
-            if (!Device.RawSetEvent(base.device, 0x222040, ref handle, (uint) IntPtr.Size, IntPtr.Zero, 0, out num, IntPtr.Zero))
+            if (!Device.RawSetEvent(base.device, 0x222040, ref handle, (uint)IntPtr.Size, IntPtr.Zero, 0, out num, IntPtr.Zero))
             {
                 base.device.Close();
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
@@ -37,28 +37,28 @@ namespace low_level_sendkeys.KernelHotkey
         }
 
         [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("kernel32.dll", EntryPoint="DeviceIoControl", CharSet=CharSet.Auto, SetLastError=true)]
+        [DllImport("kernel32.dll", EntryPoint = "DeviceIoControl", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool RawRead(SafeFileHandle Device, uint IoControlCode, IntPtr InBuffer, uint InBufferSize, [In, Out] MOUSE_INPUT_DATA[] OutBuffer, uint OutBufferSize, out uint BytesReturned, IntPtr Overlapped);
         [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("kernel32.dll", EntryPoint="DeviceIoControl", CharSet=CharSet.Auto, SetLastError=true)]
+        [DllImport("kernel32.dll", EntryPoint = "DeviceIoControl", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool RawRead(SafeFileHandle Device, uint IoControlCode, IntPtr InBuffer, uint InBufferSize, out MOUSE_INPUT_DATA OutBuffer, uint OutBufferSize, out uint BytesReturned, IntPtr Overlapped);
         [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("kernel32.dll", EntryPoint="DeviceIoControl", CharSet=CharSet.Auto, SetLastError=true)]
+        [DllImport("kernel32.dll", EntryPoint = "DeviceIoControl", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool RawWrite(SafeFileHandle Device, uint IoControlCode, MOUSE_INPUT_DATA[] InBuffer, uint InBufferSize, IntPtr OutBuffer, uint OutBufferSize, out uint BytesReturned, IntPtr Overlapped);
         [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("kernel32.dll", EntryPoint="DeviceIoControl", CharSet=CharSet.Auto, SetLastError=true)]
+        [DllImport("kernel32.dll", EntryPoint = "DeviceIoControl", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool RawWrite(SafeFileHandle Device, uint IoControlCode, ref MOUSE_INPUT_DATA InBuffer, uint InBufferSize, IntPtr OutBuffer, uint OutBufferSize, out uint BytesReturned, IntPtr Overlapped);
         public Stroke Read()
         {
             MOUSE_INPUT_DATA outBuffer = new MOUSE_INPUT_DATA();
             uint bytesReturned = 0;
-            uint outBufferSize = (uint) Marshal.SizeOf(typeof(MOUSE_INPUT_DATA));
+            uint outBufferSize = (uint)Marshal.SizeOf(typeof(MOUSE_INPUT_DATA));
             RawRead(base.device, 0x222100, IntPtr.Zero, 0, out outBuffer, outBufferSize, out bytesReturned, IntPtr.Zero);
             if (bytesReturned > 0)
             {
                 Stroke stroke = new Stroke();
-                stroke.flags = (Flags) outBuffer.Flags;
-                stroke.state = (States) outBuffer.ButtonFlags;
+                stroke.flags = (Flags)outBuffer.Flags;
+                stroke.state = (States)outBuffer.ButtonFlags;
                 stroke.rolling = outBuffer.ButtonData;
                 stroke.x = outBuffer.LastX;
                 stroke.y = outBuffer.LastY;
@@ -81,13 +81,13 @@ namespace low_level_sendkeys.KernelHotkey
             }
             MOUSE_INPUT_DATA[] outBuffer = new MOUSE_INPUT_DATA[number];
             uint bytesReturned = 0;
-            uint num2 = (uint) Marshal.SizeOf(typeof(MOUSE_INPUT_DATA));
-            RawRead(base.device, 0x222100, IntPtr.Zero, 0, outBuffer, (uint) (number * num2), out bytesReturned, IntPtr.Zero);
+            uint num2 = (uint)Marshal.SizeOf(typeof(MOUSE_INPUT_DATA));
+            RawRead(base.device, 0x222100, IntPtr.Zero, 0, outBuffer, (uint)(number * num2), out bytesReturned, IntPtr.Zero);
             bytesReturned /= num2;
             for (int i = 0; i < bytesReturned; i++)
             {
-                strokes[i].flags = (Flags) outBuffer[i].Flags;
-                strokes[i].state = (States) outBuffer[i].ButtonFlags;
+                strokes[i].flags = (Flags)outBuffer[i].Flags;
+                strokes[i].state = (States)outBuffer[i].ButtonFlags;
                 strokes[i].rolling = outBuffer[i].ButtonData;
                 strokes[i].x = outBuffer[i].LastX;
                 strokes[i].y = outBuffer[i].LastY;
@@ -112,70 +112,70 @@ namespace low_level_sendkeys.KernelHotkey
             {
                 if (device2 is Mouse)
                 {
-                    mouseArray[num++] = (Mouse) device2;
+                    mouseArray[num++] = (Mouse)device2;
                 }
             }
             return mouseArray;
         }
 
-        public static Mouse Wait(Device[] devices)
+        public static new Mouse Wait(Device[] devices)
         {
-            return (Mouse) Device.Wait(SelectMice(devices));
+            return (Mouse)Device.Wait(SelectMice(devices));
         }
 
         public static Mouse Wait(Mouse[] mice)
         {
-            return (Mouse) Device.Wait(mice);
+            return (Mouse)Device.Wait(mice);
         }
 
-        public static Mouse Wait(Device[] devices, int millisecondsTimeout)
+        public static new Mouse Wait(Device[] devices, int millisecondsTimeout)
         {
-            return (Mouse) Device.Wait(SelectMice(devices), millisecondsTimeout);
+            return (Mouse)Device.Wait(SelectMice(devices), millisecondsTimeout);
         }
 
-        public static Mouse Wait(Device[] devices, TimeSpan timeout)
+        public static new Mouse Wait(Device[] devices, TimeSpan timeout)
         {
-            return (Mouse) Device.Wait(SelectMice(devices), timeout);
+            return (Mouse)Device.Wait(SelectMice(devices), timeout);
         }
 
         public static Mouse Wait(Mouse[] mice, int millisecondsTimeout)
         {
-            return (Mouse) Device.Wait(mice, millisecondsTimeout);
+            return (Mouse)Device.Wait(mice, millisecondsTimeout);
         }
 
         public static Mouse Wait(Mouse[] mice, TimeSpan timeout)
         {
-            return (Mouse) Device.Wait(mice, timeout);
+            return (Mouse)Device.Wait(mice, timeout);
         }
 
-        public static Mouse Wait(Device[] devices, int millisecondsTimeout, bool exitContext)
+        public static new Mouse Wait(Device[] devices, int millisecondsTimeout, bool exitContext)
         {
-            return (Mouse) Device.Wait(SelectMice(devices), millisecondsTimeout, exitContext);
+            return (Mouse)Device.Wait(SelectMice(devices), millisecondsTimeout, exitContext);
         }
 
-        public static Mouse Wait(Device[] devices, TimeSpan timeout, bool exitContext)
+        public static new Mouse Wait(Device[] devices, TimeSpan timeout, bool exitContext)
         {
-            return (Mouse) Device.Wait(SelectMice(devices), timeout, exitContext);
+            return (Mouse)Device.Wait(SelectMice(devices), timeout, exitContext);
         }
 
         public static Mouse Wait(Mouse[] mice, int millisecondsTimeout, bool exitContext)
         {
-            return (Mouse) Device.Wait(mice, millisecondsTimeout, exitContext);
+            return (Mouse)Device.Wait(mice, millisecondsTimeout, exitContext);
         }
 
         public static Mouse Wait(Mouse[] mice, TimeSpan timeout, bool exitContext)
         {
-            return (Mouse) Device.Wait(mice, timeout, exitContext);
+            return (Mouse)Device.Wait(mice, timeout, exitContext);
         }
 
         public bool Write(Stroke stroke)
         {
             MOUSE_INPUT_DATA inBuffer = new MOUSE_INPUT_DATA();
             uint bytesReturned = 0;
-            uint inBufferSize = (uint) Marshal.SizeOf(typeof(MOUSE_INPUT_DATA));
+            uint inBufferSize = (uint)Marshal.SizeOf(typeof(MOUSE_INPUT_DATA));
             inBuffer.UnitId = 0;
-            inBuffer.Flags = (ushort) stroke.flags;
-            inBuffer.ButtonFlags = (ushort) stroke.state;
+            inBuffer.Flags = (ushort)stroke.flags;
+            inBuffer.ButtonFlags = (ushort)stroke.state;
             inBuffer.ButtonData = stroke.rolling;
             inBuffer.RawButtons = 0;
             inBuffer.LastX = stroke.x;
@@ -198,19 +198,19 @@ namespace low_level_sendkeys.KernelHotkey
             }
             MOUSE_INPUT_DATA[] inBuffer = new MOUSE_INPUT_DATA[number];
             uint bytesReturned = 0;
-            uint num2 = (uint) Marshal.SizeOf(typeof(MOUSE_INPUT_DATA));
+            uint num2 = (uint)Marshal.SizeOf(typeof(MOUSE_INPUT_DATA));
             for (int i = 0; i < number; i++)
             {
                 inBuffer[i].UnitId = 0;
-                inBuffer[i].Flags = (ushort) strokes[i].flags;
-                inBuffer[i].ButtonFlags = (ushort) strokes[i].state;
+                inBuffer[i].Flags = (ushort)strokes[i].flags;
+                inBuffer[i].ButtonFlags = (ushort)strokes[i].state;
                 inBuffer[i].ButtonData = strokes[i].rolling;
                 inBuffer[i].RawButtons = 0;
                 inBuffer[i].LastX = strokes[i].x;
                 inBuffer[i].LastY = strokes[i].y;
                 inBuffer[i].ExtraInformation = strokes[i].information;
             }
-            RawWrite(base.device, 0x222080, inBuffer, (uint) (number * num2), IntPtr.Zero, 0, out bytesReturned, IntPtr.Zero);
+            RawWrite(base.device, 0x222080, inBuffer, (uint)(number * num2), IntPtr.Zero, 0, out bytesReturned, IntPtr.Zero);
             return (bytesReturned / num2);
         }
 
@@ -221,12 +221,12 @@ namespace low_level_sendkeys.KernelHotkey
                 ushort num;
                 uint num2;
                 Device.RawGetFilter(base.device, 0x222020, IntPtr.Zero, 0, out num, 2, out num2, IntPtr.Zero);
-                return (Filters) num;
+                return (Filters)num;
             }
             set
             {
                 uint num2;
-                ushort inBuffer = (ushort) value;
+                ushort inBuffer = (ushort)value;
                 Device.RawSetFilter(base.device, 0x222010, ref inBuffer, 2, IntPtr.Zero, 0, out num2, IntPtr.Zero);
             }
         }

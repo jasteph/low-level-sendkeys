@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comunnication\ClienteTcp.cs" />
+    <Compile Include="Comunnication\CommandMap.cs" />
+    <Compile Include="Comunnication\MainSocket.cs" />
+    <Compile Include="Comunnication\NewLineReplaceStreamWriter.cs" />
+    <Compile Include="Comunnication\SocketCommandsStream.cs" />
+    <Compile Include="Comunnication\SocketConnection.cs" />
     <Compile Include="ConsoleHandling.cs" />
     <Compile Include="InputKeyName.cs">
       <SubType>Form</SubType>

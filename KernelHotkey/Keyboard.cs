@@ -13,28 +13,30 @@ namespace low_level_sendkeys.KernelHotkey
             uint num;
             if ((id < 0) || (id > 9))
             {
-                throw new ArgumentOutOfRangeException("number");
+                throw new ArgumentOutOfRangeException("id");
             }
             string fileName = @"\\.\keyboard" + id.ToString();
-            base.device = Device.CreateFile(fileName, FileAccess.Read, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
-            if (base.device.IsInvalid)
+            device = CreateFile(fileName, FileAccess.Read, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
+            if (device.IsInvalid)
             {
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
             }
-            base.unempty = new ManualResetEvent(false);
-            IntPtr handle = base.unempty.SafeWaitHandle.DangerousGetHandle();
-            if (!Device.RawSetEvent(base.device, 0x222040, ref handle, (uint) IntPtr.Size, IntPtr.Zero, 0, out num, IntPtr.Zero))
+            unempty = new ManualResetEvent(false);
+            IntPtr handle = unempty.SafeWaitHandle.DangerousGetHandle();
+            if (!RawSetEvent(device, 0x222040, ref handle, (uint) IntPtr.Size, IntPtr.Zero, 0, out num, IntPtr.Zero))
             {
-                base.device.Close();
+                device.Close();
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
             }
-            base.ID = id;
+            ID = id;
         }
 
         ~Keyboard()
         {
-            base.device.Close();
+            device.Close();
         }
+
+// ReSharper disable InconsistentNaming
 
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", EntryPoint="DeviceIoControl", CharSet=CharSet.Auto, SetLastError=true)]
@@ -48,6 +50,9 @@ namespace low_level_sendkeys.KernelHotkey
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", EntryPoint="DeviceIoControl", CharSet=CharSet.Auto, SetLastError=true)]
         private static extern bool RawWrite(SafeFileHandle Device, uint IoControlCode, ref KEYBOARD_INPUT_DATA InBuffer, uint InBufferSize, IntPtr OutBuffer, uint OutBufferSize, out uint BytesReturned, IntPtr Overlapped);
+
+// ReSharper restore InconsistentNaming
+
         public KeyStroke Read()
         {
             KEYBOARD_INPUT_DATA outBuffer = new KEYBOARD_INPUT_DATA();
@@ -56,7 +61,7 @@ namespace low_level_sendkeys.KernelHotkey
             RawRead(base.device, 0x222100, IntPtr.Zero, 0, out outBuffer, outBufferSize, out bytesReturned, IntPtr.Zero);
             if (bytesReturned > 0)
             {
-                KeyStroke keyStroke = new KeyStroke();
+                var keyStroke = new KeyStroke();
                 keyStroke.code = outBuffer.MakeCode;
                 keyStroke.state = (States) outBuffer.Flags;
                 keyStroke.information = outBuffer.ExtraInformation;
@@ -67,7 +72,7 @@ namespace low_level_sendkeys.KernelHotkey
 
         public uint Read(KeyStroke[] keyStrokes)
         {
-            return this.Read(keyStrokes, keyStrokes.Length);
+            return Read(keyStrokes, keyStrokes.Length);
         }
 
         public uint Read(KeyStroke[] keyStrokes, int number)
@@ -112,7 +117,7 @@ namespace low_level_sendkeys.KernelHotkey
             return keyboardArray;
         }
 
-        public static Keyboard Wait(Device[] devices)
+        public static new Keyboard Wait(Device[] devices)
         {
             return (Keyboard) Device.Wait(SelectKeyboards(devices));
         }
@@ -122,12 +127,12 @@ namespace low_level_sendkeys.KernelHotkey
             return (Keyboard) Device.Wait(keyboards);
         }
 
-        public static Keyboard Wait(Device[] devices, int millisecondsTimeout)
+        public static new Keyboard Wait(Device[] devices, int millisecondsTimeout)
         {
             return (Keyboard) Device.Wait(SelectKeyboards(devices), millisecondsTimeout);
         }
 
-        public static Keyboard Wait(Device[] devices, TimeSpan timeout)
+        public static new Keyboard Wait(Device[] devices, TimeSpan timeout)
         {
             return (Keyboard) Device.Wait(SelectKeyboards(devices), timeout);
         }
@@ -142,12 +147,12 @@ namespace low_level_sendkeys.KernelHotkey
             return (Keyboard) Device.Wait(keyboards, timeout);
         }
 
-        public static Keyboard Wait(Device[] devices, int millisecondsTimeout, bool exitContext)
+        public static new Keyboard Wait(Device[] devices, int millisecondsTimeout, bool exitContext)
         {
             return (Keyboard) Device.Wait(SelectKeyboards(devices), millisecondsTimeout, exitContext);
         }
 
-        public static Keyboard Wait(Device[] devices, TimeSpan timeout, bool exitContext)
+        public static new Keyboard Wait(Device[] devices, TimeSpan timeout, bool exitContext)
         {
             return (Keyboard) Device.Wait(SelectKeyboards(devices), timeout, exitContext);
         }
