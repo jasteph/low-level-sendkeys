@@ -6,6 +6,7 @@ using low_level_sendkeys.Keys;
 using low_level_sendkeys.Properties;
 using low_level_sendkeys.KernelHotkey;
 using System.Threading;
+using low_level_sendkeys.Comunnication;
 
 namespace low_level_sendkeys
 {
@@ -25,9 +26,29 @@ namespace low_level_sendkeys
             messageManager.MessageReceived += messageManager_MessageReceived;
         }
 
-        void messageManager_MessageReceived(object sender, string message)
+        void messageManager_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            MessageBox.Show("Mensagem recebida: " + message);
+            string[] tokens = e.Message.Split(' ');
+            bool hasParans = tokens.Length > 1;
+            CommandMap.Commands command = CommandMap.FindCommand(tokens[0]);
+            switch (command)
+            {
+                case CommandMap.Commands.Sendkeys:
+                    if (hasParans)
+                    {
+                        var resp = CommunicationBridge.SendKeys(string.Join(" ", tokens.Skip(1).ToArray()));
+                        MessageBox.Show(string.Format("Teclas enviadas: {0} - RESPOSTA: {1}", string.Join(" ", tokens.Skip(1).ToArray()), resp));
+                    }
+                    break;
+                case CommandMap.Commands.ListKeys:
+                    e.Response = CommunicationBridge.ListKeys();
+                    return;
+                default:
+                    MessageBox.Show(string.Format("Mensagem recebida: FROM: {0}  MESSAGE: {1}", e.SourceContainer, e.Message));
+                    break;
+            }
+            e.Response = "ESTA TUDO OK!!!";
+
         }
 
 

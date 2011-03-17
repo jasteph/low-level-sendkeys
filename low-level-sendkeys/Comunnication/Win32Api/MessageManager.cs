@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Threading;
+using System.Timers;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
@@ -15,9 +12,11 @@ namespace low_level_sendkeys.Comunnication.Win32Api
     {
         private readonly string _managerName;
         private string _messageReceived;
-        private System.Timers.Timer _timeOut;
+        private readonly Timer _timeOut;
+        private bool _waitingResponse = false;
+        private string _responseReceived = string.Empty;
 
-        public delegate void MessageReceivedEventHandler(object sender, string message);
+        public delegate void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
         public event MessageReceivedEventHandler MessageReceived;
 
         public MessageManager(string managerName)
@@ -28,13 +27,22 @@ namespace low_level_sendkeys.Comunnication.Win32Api
             Text = managerName;
 
             _timeOut = new Timer();
-
+            _timeOut.Enabled = true;
+            _timeOut.AutoReset = false;
+            _timeOut.Stop();
+            _timeOut.Elapsed += TimeoutWaitingResponse;
 
             Size = new Size(0, 0);
             Show();
             Hide();
         }
 
+        private void TimeoutWaitingResponse(object sender, ElapsedEventArgs e)
+        {
+            _responseReceived = CommunicationBridge.ResponseError + " Timeout waiting for a response";
+            _waitingResponse = false;
+            _timeOut.Stop();
+        }
 
         protected override void WndProc(ref Message m)
         {
@@ -45,9 +53,31 @@ namespace low_level_sendkeys.Comunnication.Win32Api
                     string strData = Marshal.PtrToStringUni(st.lpData);
                     _messageReceived = strData;
 
-                    if (MessageReceived != null)
+
+                    if (!string.IsNullOrEmpty(_messageReceived))
                     {
-                        MessageReceived(this, _messageReceived);
+                        int i = _messageReceived.IndexOf("#");
+                        bool requestResponse = _messageReceived.Substring(i + 1, 1) == "0" ? false : true;
+                        string sourceMessageManager = _messageReceived.Substring(0, i);
+                        string message = _messageReceived.Substring(i + 2);
+
+                        if (_waitingResponse)
+                        {
+                            _timeOut.Stop();
+                            _responseReceived = message;
+                            _waitingResponse = false;
+                        }
+                        else
+                        {
+                            var messageReceivedEventArgs = new MessageReceivedEventArgs(sourceMessageManager, message);
+
+                            if (MessageReceived != null) MessageReceived(this, messageReceivedEventArgs);
+
+                            if (requestResponse)
+                            {
+                                SendMessage(sourceMessageManager, messageReceivedEventArgs.Response);
+                            }
+                        }
                     }
                     break;
                 default:
@@ -60,19 +90,46 @@ namespace low_level_sendkeys.Comunnication.Win32Api
 
         public bool SendMessage(string destinyMessageManager, string message)
         {
-            int hwnd;
-
             //Get a handle for the Calculator Application main window
-            hwnd = Win32SupportCode.FindWindow(null, destinyMessageManager);
+            int hwnd = Win32SupportCode.FindWindow(null, destinyMessageManager);
             if (hwnd != 0)
             {
-                return SendSingleLine((IntPtr)hwnd, message);
+                return SendSingleLine((IntPtr)hwnd, _managerName + "#0" + message);
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
+
+
+        public string SendMessageAndWaitResponse(string destinyMessageManager, string message)
+        {
+            return SendMessageAndWaitResponse(destinyMessageManager, message, 10000);
+        }
+        public string SendMessageAndWaitResponse(string destinyMessageManager, string message, int timeOut)
+        {
+            //Get a handle for the Calculator Application main window
+            int hwnd = Win32SupportCode.FindWindow(null, destinyMessageManager);
+            if (hwnd != 0)
+            {
+                _waitingResponse = true;
+                bool sendMessageAndWaitResponse = SendSingleLine((IntPtr)hwnd, _managerName + "#1" + message);
+                if (!sendMessageAndWaitResponse)
+                {
+                    _waitingResponse = false;
+                    return CommunicationBridge.ResponseError + " Message could not be delivered";
+                }
+
+                _responseReceived = string.Empty;
+                _timeOut.Interval = timeOut;
+                _timeOut.Start();
+                while (_waitingResponse)
+                {
+                    Thread.Sleep(100);
+                }
+                return _responseReceived;
+            }
+            return CommunicationBridge.ResponseError + " Message could not be delivered";
+        }
+
 
         public bool CheckMessageContainer(string messageContainerName)
         {
@@ -82,7 +139,7 @@ namespace low_level_sendkeys.Comunnication.Win32Api
 
         private bool SendSingleLine(IntPtr targetHWnd, string args)
         {
-            Win32SupportCode.CopyDataStruct cds = new Win32SupportCode.CopyDataStruct();
+            var cds = new Win32SupportCode.CopyDataStruct();
             try
             {
                 cds.cbData = (args.Length + 1) * 2;
@@ -98,6 +155,30 @@ namespace low_level_sendkeys.Comunnication.Win32Api
 
             return true;
         }
+    }
+
+    public class MessageReceivedEventArgs
+    {
+        private readonly string _sourceContainer;
+        private readonly string _message;
+
+        internal MessageReceivedEventArgs(string sourceContainer, string message)
+        {
+            _sourceContainer = sourceContainer;
+            _message = message;
+        }
+        public string SourceContainer
+        {
+            get { return _sourceContainer; }
+        }
+
+        public string Message
+        {
+            get { return _message; }
+        }
+
+        public string Response { get; set; }
+
     }
 
 

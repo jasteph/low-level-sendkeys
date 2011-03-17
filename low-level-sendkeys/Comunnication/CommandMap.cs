@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 
-namespace low_level_sendkeys.Comunnication.Sockets
+namespace low_level_sendkeys.Comunnication
 {
     public class CommandMap
     {
         public enum Commands
         {
             None,
+            ListKeys,
             Sendkeys,
             Loadfile,
             RemapKey,
@@ -32,6 +33,7 @@ namespace low_level_sendkeys.Comunnication.Sockets
         static CommandMap()
         {
             CommandsMap = Hashtable.Synchronized(new Hashtable());
+            CommandsMap["LISTKEYS"] = Commands.ListKeys;
             CommandsMap["SENDKEYS"] = Commands.Sendkeys;
             CommandsMap["LOADFILE"] = Commands.Loadfile;
             CommandsMap["REMAPKEY"] = Commands.RemapKey;

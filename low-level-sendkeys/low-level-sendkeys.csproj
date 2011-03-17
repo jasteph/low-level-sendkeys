@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine">
+      <HintPath>..\libs\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -45,9 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comunnication\CommandLineOptions.cs" />
     <Compile Include="Comunnication\CommunicationBridge.cs" />
     <Compile Include="Comunnication\Sockets\ClienteTcp.cs" />
-    <Compile Include="Comunnication\Sockets\CommandMap.cs" />
+    <Compile Include="Comunnication\CommandMap.cs" />
     <Compile Include="Comunnication\Sockets\MainSocket.cs" />
     <Compile Include="Comunnication\Sockets\NewLineReplaceStreamWriter.cs" />
     <Compile Include="Comunnication\Sockets\SocketCommandsStream.cs" />

@@ -21,15 +21,12 @@
 //}
 
 using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using CommandLine;
 using low_level_sendkeys.Comunnication;
 using low_level_sendkeys.Comunnication.Sockets;
 using low_level_sendkeys.Comunnication.Win32Api;
-using Microsoft.Win32.SafeHandles;
-using System.Diagnostics;
 using low_level_sendkeys.Keys;
 
 namespace low_level_sendkeys
@@ -42,20 +39,12 @@ namespace low_level_sendkeys
         [STAThread]
         static void Main(string[] args)
         {
-            bool NoGui = false;
-            string name = "";
-            int number = 0;
+            var options = new CommandLineOptions();
 
-            for (int i = 0; i != args.Length; ++i)
+            ICommandLineParser parser = new CommandLineParser(new CommandLineParserSettings(Console.Error));
+            if (!parser.ParseArguments(args, options))
             {
-                switch (args[i])
-                {
-                    case "/NoGui": NoGui = true; break;
-                    case "/name": name = args[++i]; break;
-                    case "/number": number = int.Parse(args[++i]); break;
-                    default: Console.WriteLine("Invalid args!"); return;
-                }
-
+                Environment.Exit(1);
             }
 
 
@@ -64,7 +53,7 @@ namespace low_level_sendkeys
             //Não é o caso aqui, mas vale a dica.
             var mutex = new Mutex(false, "low-level-sendkeys-mutex", out firstInstance);
 
-            if (!NoGui && firstInstance)
+            if (!options.Quit && firstInstance)
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -83,12 +72,12 @@ namespace low_level_sendkeys
                 ConsoleHandling.InitConsoleHandles();
                 if (!firstInstance)
                 {
-                    StartedAsAnotherInstance();
+                    StartedAsAnotherInstance(options);
                 }
                 else
                 {
                     // to demonstrate where the console output is going
-                    StartedInCommandLineMode(args);
+                    StartedInCommandLineMode(options);
                 }
                 ConsoleHandling.ReleaseConsoleHandles();
             }
@@ -97,15 +86,27 @@ namespace low_level_sendkeys
             Application.Exit();
         }
 
-        private static void StartedAsAnotherInstance()
+        private static void StartedAsAnotherInstance(CommandLineOptions options)
         {
+            const string mainContainrName = "low-levelkeys-main";
+
             var messageContainer = new MessageManager("teste");
-            var exists = messageContainer.CheckMessageContainer("low-levelkeys-main");
+            var exists = messageContainer.CheckMessageContainer(mainContainrName);
             if (exists)
             {
-                Console.WriteLine("Já está executando. Enviando mensagem TESTE");
-                var result = messageContainer.SendMessage("low-levelkeys-main", "TESTE");
-                Console.WriteLine("Mensagem enviada. Resposta: {0}", result);
+                Console.WriteLine("Já está executando. Enviando mensagens");
+
+                if (!string.IsNullOrEmpty(options.SendKeys))
+                {
+                    var result = messageContainer.SendMessage(mainContainrName, "SENDKEYS " + options.SendKeys);
+                    Console.WriteLine("Mensagem enviada. Resposta: {0}", result);
+                }
+
+                if (options.ListKeys)
+                {
+                    var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "LISTKEYS");
+                    Console.WriteLine("ListKeys enviado. Resposta: {0}", result);
+                }
             }
             else
             {
@@ -114,16 +115,10 @@ namespace low_level_sendkeys
             }
         }
 
-        private static void StartedInCommandLineMode(string[] args)
+        private static void StartedInCommandLineMode(CommandLineOptions options)
         {
-            int argCount = args == null ? 0 : args.Length;
             Console.WriteLine("\n\n\n************Console Application Starting!!!*************");
-            Console.WriteLine("You specified {0} arguments:", argCount);
-            Console.Error.WriteLine("This is the error channel");
-            for (int i = 0; i < argCount; i++)
-            {
-                Console.WriteLine(" {0}", args[i]);
-            }
+
             Console.WriteLine("*************Console Application Ended!***********");
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace low_level_sendkeys.Comunnication
@@ -34,6 +35,15 @@ namespace low_level_sendkeys.Comunnication
             Application.Exit();
 
             return ResponseOk;
+        }
+
+        public static string ListKeys()
+        {
+            var sb = new StringBuilder();
+            Keys.KeyManager.Keys.ForEach(k => sb.AppendLine(k.Name));
+
+            sb.AppendLine(ResponseOk);
+            return sb.ToString();
         }
     }
 

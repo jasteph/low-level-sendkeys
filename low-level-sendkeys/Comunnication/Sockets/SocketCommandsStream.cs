@@ -2,7 +2,6 @@
 using System.Collections;
 using System.IO;
 using System.Net.Sockets;
-using System.Windows.Forms;
 
 namespace low_level_sendkeys.Comunnication.Sockets
 {
@@ -49,6 +48,9 @@ namespace low_level_sendkeys.Comunnication.Sockets
                 case CommandMap.Commands.Help:
                     ShowHelp();
                     return CommunicationBridge.ResponseOk;
+                case CommandMap.Commands.ListKeys:
+                    return CommunicationBridge.ListKeys();
+
             }
 
             return (CommunicationBridge.ResponseError + " Invalid Command.");
@@ -56,6 +58,7 @@ namespace low_level_sendkeys.Comunnication.Sockets
 
         public void ShowHelp()
         {
+            _socketWriter.WriteLine("LISTKEYS");
             _socketWriter.WriteLine("SENDKEYS");
             _socketWriter.WriteLine("LOADFILE");
             _socketWriter.WriteLine("REMAPKEY");
