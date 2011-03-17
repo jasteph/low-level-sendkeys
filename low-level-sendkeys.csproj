@@ -45,12 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comunnication\ClienteTcp.cs" />
-    <Compile Include="Comunnication\CommandMap.cs" />
-    <Compile Include="Comunnication\MainSocket.cs" />
-    <Compile Include="Comunnication\NewLineReplaceStreamWriter.cs" />
-    <Compile Include="Comunnication\SocketCommandsStream.cs" />
-    <Compile Include="Comunnication\SocketConnection.cs" />
+    <Compile Include="Comunnication\Sockets\ClienteTcp.cs" />
+    <Compile Include="Comunnication\Sockets\CommandMap.cs" />
+    <Compile Include="Comunnication\Sockets\MainSocket.cs" />
+    <Compile Include="Comunnication\Sockets\NewLineReplaceStreamWriter.cs" />
+    <Compile Include="Comunnication\Sockets\SocketCommandsStream.cs" />
+    <Compile Include="Comunnication\Sockets\SocketConnection.cs" />
+    <Compile Include="Comunnication\Win32Api\MessageManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Comunnication\Win32Api\MessageManager.Designer.cs">
+      <DependentUpon>MessageManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Comunnication\Win32Api\Win32SupportCode.cs" />
     <Compile Include="ConsoleHandling.cs" />
     <Compile Include="InputKeyName.cs">
       <SubType>Form</SubType>
@@ -88,6 +95,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SendRawKeys.cs" />
+    <EmbeddedResource Include="Comunnication\Win32Api\MessageManager.resx">
+      <DependentUpon>MessageManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InputKeyName.resx">
       <DependentUpon>InputKeyName.cs</DependentUpon>
     </EmbeddedResource>

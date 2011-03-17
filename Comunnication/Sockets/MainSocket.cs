@@ -4,23 +4,21 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace low_level_sendkeys.Comunnication
+namespace low_level_sendkeys.Comunnication.Sockets
 {
     public class MainSocket
     {
         private readonly string _endLine;
-        private readonly bool _trataRespErro;
         private readonly int _socketPort;
 
-        public MainSocket(int socketPort, bool trataRespostaErro, string endLine)
+        public MainSocket(int socketPort, string endLine)
         {
             _endLine = endLine;
-            _trataRespErro = trataRespostaErro;
             _socketPort = socketPort;
         }
 
         public MainSocket(int socketPort)
-            : this(socketPort, false, Environment.NewLine)
+            : this(socketPort, Environment.NewLine)
         {
         }
 

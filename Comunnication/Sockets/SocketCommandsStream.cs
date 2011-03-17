@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.ComponentModel;
 using System.IO;
 using System.Net.Sockets;
 using System.Windows.Forms;
 
-namespace low_level_sendkeys.Comunnication
+namespace low_level_sendkeys.Comunnication.Sockets
 {
     public class SocketCommandsStream
     {

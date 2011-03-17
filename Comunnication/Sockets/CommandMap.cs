@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace low_level_sendkeys.Comunnication
+namespace low_level_sendkeys.Comunnication.Sockets
 {
     public class CommandMap
     {

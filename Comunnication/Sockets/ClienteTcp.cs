@@ -4,7 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
-namespace low_level_sendkeys.Comunnication
+namespace low_level_sendkeys.Comunnication.Sockets
 {
     public class ClienteTcp
     {

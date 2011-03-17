@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
-namespace low_level_sendkeys.Comunnication
+namespace low_level_sendkeys.Comunnication.Sockets
 {
     public static class SocketConnection
     {

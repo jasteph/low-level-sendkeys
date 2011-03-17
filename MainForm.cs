@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using low_level_sendkeys.Comunnication.Win32Api;
 using low_level_sendkeys.Keys;
 using low_level_sendkeys.Properties;
 using low_level_sendkeys.KernelHotkey;
@@ -10,6 +11,8 @@ namespace low_level_sendkeys
 {
     public partial class MainForm : Form
     {
+        private MessageManager messageManager;
+
         public MainForm()
         {
             InitializeComponent();
@@ -17,6 +20,14 @@ namespace low_level_sendkeys
             KeyManager.Keys.ForEach(AddKeyNode);
 
             EnableButtons();
+
+            messageManager = new MessageManager("low-levelkeys-main");
+            messageManager.MessageReceived += new MessageManager.MessageReceivedEventHandler(messageManager_MessageReceived);
+        }
+
+        void messageManager_MessageReceived(object sender, string message)
+        {
+            MessageBox.Show("Mensagem recebida: " + message);
         }
 
 
