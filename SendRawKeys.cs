@@ -79,7 +79,7 @@ namespace low_level_sendkeys
             foreach (IExecuteCommand executeCommand in executeCommands)
             {
                 executeCommand.Execute();
-                Thread.Sleep(50);
+                Thread.Sleep(5);
             }
             keyboardManager.StopListenKeyBoard();
 
