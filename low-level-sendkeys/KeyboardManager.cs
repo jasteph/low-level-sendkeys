@@ -22,6 +22,8 @@ namespace low_level_sendkeys
         public bool KeyboardListening { get; private set; }
         private Thread _threadKeyboardListen;
 
+        private static int _firstKeyboardActive = 0;
+
         public KeyboardManager()
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
@@ -117,8 +119,15 @@ namespace low_level_sendkeys
             }
         }
 
+        public static void RefreshFirstActiveKeyboard()
+        {
+            GetConnectedKeyboard();
+        }
+
         public static BitArray GetConnectedKeyboard()
         {
+            var anyActive = false;
+
             var keyboardsStatus = new BitArray(10, false);
 
             var km = new KeyboardManager();
@@ -130,15 +139,20 @@ namespace low_level_sendkeys
                 keyStroke.code = 42;
                 keyStroke.state = Keyboard.States.MAKE;
 
-                if (km.SendKeystroke(keyStroke,i))
+                if (km.SendKeystroke(keyStroke, i))
                 {
+                    if (!anyActive)
+                    {
+                        anyActive = true;
+                        _firstKeyboardActive = i;
+                    }
                     //finish the keystroke
                     keyStroke.state = Keyboard.States.BREAK;
                     km.SendKeystroke(keyStroke, i);
 
                     keyboardsStatus[i] = true;
                 }
-                
+
             }
             km.StopListenKeyBoard();
             return keyboardsStatus;
@@ -163,6 +177,14 @@ namespace low_level_sendkeys
             Console.WriteLine("Enviei keystroke: {0}, id {1}, OK: {2}", keyStroke.ToString(), keyboardNumber, result);
 
             return result;
+        }
+
+        public static int FirstActiveKeyboard
+        {
+            get
+            {
+                return _firstKeyboardActive;
+            }
         }
     }
 }

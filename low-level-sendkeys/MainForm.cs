@@ -31,24 +31,33 @@ namespace low_level_sendkeys
             string[] tokens = e.Message.Split(' ');
             bool hasParans = tokens.Length > 1;
             CommandMap.Commands command = CommandMap.FindCommand(tokens[0]);
+
             switch (command)
             {
+                case CommandMap.Commands.Help:
+                case CommandMap.Commands.Loadfile:
+                    e.Response = CommunicationBridge.ResponseError + " Not implemented yet";
+                break;
+
+                case CommandMap.Commands.Quit:
+                    e.Response = CommunicationBridge.ResponseError + " Command invalid on this context.";
+                    break;
+                case CommandMap.Commands.UnloadApplication:
+                    e.Response = CommunicationBridge.UnloadApplication();
+                    break;
                 case CommandMap.Commands.Sendkeys:
                     if (hasParans)
                     {
-                        var resp = CommunicationBridge.SendKeys(string.Join(" ", tokens.Skip(1).ToArray()));
-                        MessageBox.Show(string.Format("Teclas enviadas: {0} - RESPOSTA: {1}", string.Join(" ", tokens.Skip(1).ToArray()), resp));
+                        e.Response = CommunicationBridge.SendKeys(string.Join(" ", tokens.Skip(1).ToArray()));
                     }
                     break;
                 case CommandMap.Commands.ListKeys:
                     e.Response = CommunicationBridge.ListKeys();
                     return;
                 default:
-                    MessageBox.Show(string.Format("Mensagem recebida: FROM: {0}  MESSAGE: {1}", e.SourceContainer, e.Message));
+                    e.Response = CommunicationBridge.ResponseError + " Unknow command: " + tokens[0];
                     break;
             }
-            e.Response = "ESTA TUDO OK!!!";
-
         }
 
 

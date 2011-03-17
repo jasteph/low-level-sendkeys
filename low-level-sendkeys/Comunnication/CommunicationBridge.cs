@@ -45,6 +45,29 @@ namespace low_level_sendkeys.Comunnication
             sb.AppendLine(ResponseOk);
             return sb.ToString();
         }
+
+        public static string StartSocketServer()
+        {
+            if (Sockets.SocketConnection.IsSocketServerRunnig())
+            {
+                return ResponseError + " socket server already running at port " + Sockets.SocketConnection.ServerPort;
+            }
+
+            Sockets.SocketConnection.StartSocketServer();
+
+            return ResponseOk;
+        }
+
+        public static string StopSocketServer()
+        {
+            if (!Sockets.SocketConnection.IsSocketServerRunnig())
+            {
+                return ResponseError + " Server was not running";
+            }
+
+            Sockets.SocketConnection.StopSocketServer();
+            return ResponseOk;
+        }
     }
 
 }

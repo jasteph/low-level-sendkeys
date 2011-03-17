@@ -55,16 +55,7 @@ namespace low_level_sendkeys
 
             if (!options.Quit && firstInstance)
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-
-                KeyManager.LoadKeyListFromDisk();
-                SocketConnection.StartSocketServer();
-
-                Application.Run(new MainForm());
-
-                KeyManager.SaveKeyListToDisk();
-                SocketConnection.StopSocketServer();
+                StartMainInstance();
             }
             else
             {
@@ -86,26 +77,50 @@ namespace low_level_sendkeys
             Application.Exit();
         }
 
+        private static void StartMainInstance()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            KeyManager.LoadKeyListFromDisk();
+
+            KeyboardManager.RefreshFirstActiveKeyboard();
+            SendRawKeys.StartService();
+            SocketConnection.StartSocketServer();
+
+            Application.Run(new MainForm());
+
+            KeyManager.SaveKeyListToDisk();
+            SocketConnection.StopSocketServer();
+            SendRawKeys.StopService();
+        }
+
         private static void StartedAsAnotherInstance(CommandLineOptions options)
         {
             const string mainContainrName = "low-levelkeys-main";
 
-            var messageContainer = new MessageManager("teste");
+            var messageContainer = new MessageManager("low-levelkeys-sencond-instance");
             var exists = messageContainer.CheckMessageContainer(mainContainrName);
             if (exists)
             {
-                Console.WriteLine("Já está executando. Enviando mensagens");
-
                 if (!string.IsNullOrEmpty(options.SendKeys))
                 {
-                    var result = messageContainer.SendMessage(mainContainrName, "SENDKEYS " + options.SendKeys);
-                    Console.WriteLine("Mensagem enviada. Resposta: {0}", result);
+                    var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "SENDKEYS " + options.SendKeys);
+                    if (result == CommunicationBridge.ResponseOk)
+                    {
+                        Console.WriteLine("Keys sent sucefully");
+                    }
+                    else
+                    {
+                        Console.WriteLine(result);
+                    }
                 }
 
                 if (options.ListKeys)
                 {
                     var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "LISTKEYS");
-                    Console.WriteLine("ListKeys enviado. Resposta: {0}", result);
+                    Console.WriteLine("ListKeys response:");
+                    Console.WriteLine(result);
                 }
             }
             else

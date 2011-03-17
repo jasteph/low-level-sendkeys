@@ -10,12 +10,20 @@ namespace low_level_sendkeys
 {
     public static class SendRawKeys
     {
+        static KeyboardManager keyboardManager = new KeyboardManager();
+
+        public static void StartService()
+        {
+            keyboardManager.ListenKeyBoard();
+        }
+        public static void StopService()
+        {
+            keyboardManager.StopListenKeyBoard();
+        }
 
         public static bool SendKeys(string commands)
         {
             if (string.IsNullOrEmpty(commands)) return false;
-
-            KeyboardManager keyboardManager = new KeyboardManager();
 
             int startIndex = 0;
             int kbdIndex = 0;
@@ -30,7 +38,7 @@ namespace low_level_sendkeys
                 }
                 else
                 {
-                    kbdIndex = 0;
+                    kbdIndex = KeyboardManager.FirstActiveKeyboard;
                 }
             }
 

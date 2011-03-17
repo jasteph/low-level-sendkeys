@@ -111,6 +111,7 @@ namespace low_level_sendkeys.Comunnication.Win32Api
             if (hwnd != 0)
             {
                 _waitingResponse = true;
+                _responseReceived = string.Empty;
                 bool sendMessageAndWaitResponse = SendSingleLine((IntPtr)hwnd, _managerName + "#1" + message);
                 if (!sendMessageAndWaitResponse)
                 {
@@ -118,7 +119,6 @@ namespace low_level_sendkeys.Comunnication.Win32Api
                     return CommunicationBridge.ResponseError + " Message could not be delivered";
                 }
 
-                _responseReceived = string.Empty;
                 _timeOut.Interval = timeOut;
                 _timeOut.Start();
                 while (_waitingResponse)

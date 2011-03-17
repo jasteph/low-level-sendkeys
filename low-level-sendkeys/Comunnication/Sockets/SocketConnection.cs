@@ -6,6 +6,7 @@ namespace low_level_sendkeys.Comunnication.Sockets
     public static class SocketConnection
     {
         private static Thread _threadSocket;
+        private static int _serverPort;
 
         static SocketConnection()
         {
@@ -20,7 +21,9 @@ namespace low_level_sendkeys.Comunnication.Sockets
         {
             if (IsSocketServerRunnig()) return;
 
-            var mainSocket = new MainSocket(port);
+            _serverPort = port;
+
+            var mainSocket = new MainSocket(_serverPort);
             _threadSocket = new Thread(mainSocket.WaitForConnections);
             _threadSocket.Name = "LowLevelKeys Socket Server #" + port;
             _threadSocket.Start();
@@ -44,6 +47,14 @@ namespace low_level_sendkeys.Comunnication.Sockets
             if (!(e.ExceptionObject is ThreadAbortException))
             {
                 System.Diagnostics.EventLog.WriteEntry("low-level-sendkeys", "Unhandled Exception at socket-server: " + e.ToString());
+            }
+        }
+
+        public static int ServerPort
+        {
+            get
+            {
+                return _serverPort;
             }
         }
 
