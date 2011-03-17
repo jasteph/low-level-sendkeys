@@ -438,5 +438,16 @@ namespace low_level_sendkeys
             SendRawKeys.SendCommands(SendCommands.Text);
         }
 
+        private void CheckKeyboardsCommand_Click(object sender, EventArgs e)
+        {
+            var keyboardStatus = KeyboardManager.GetConnectedKeyboard();
+
+            for (int i = 0; i < keyboardStatus.Count; i++)
+            {
+                tabPage2.Controls["Keyboard" + i].Text = string.Format("Keyboard {0}: {1}", i, keyboardStatus[i] ? "Connected" : "Disconnected");
+                tabPage2.Controls["Keyboard" + i].ForeColor = keyboardStatus[i] ? System.Drawing.Color.Green : System.Drawing.Color.Red;
+            }
+        }
+
     }
 }

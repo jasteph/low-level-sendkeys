@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -40,6 +41,8 @@ namespace low_level_sendkeys
 
             _threadKeyboardListen = new Thread(ListenKeyBoardExecute);
             _threadKeyboardListen.Start();
+
+            while (!KeyboardListening) { }
         }
 
         public void StopListenKeyBoard()
@@ -65,7 +68,7 @@ namespace low_level_sendkeys
             }
         }
 
-        public void ListenKeyBoardExecute()
+        private void ListenKeyBoardExecute()
         {
             KeyboardListening = true;
 
@@ -114,6 +117,33 @@ namespace low_level_sendkeys
             }
         }
 
+        public static BitArray GetConnectedKeyboard()
+        {
+            var keyboardsStatus = new BitArray(10, false);
+
+            var km = new KeyboardManager();
+            var keyStroke = new KeyStroke();
+
+            km.ListenKeyBoard();
+            for (int i = 0; i < keyboardsStatus.Length; i++)
+            {
+                keyStroke.code = 42;
+                keyStroke.state = Keyboard.States.MAKE;
+
+                if (km.SendKeystroke(keyStroke,i))
+                {
+                    //finish the keystroke
+                    keyStroke.state = Keyboard.States.BREAK;
+                    km.SendKeystroke(keyStroke, i);
+
+                    keyboardsStatus[i] = true;
+                }
+                
+            }
+            km.StopListenKeyBoard();
+            return keyboardsStatus;
+        }
+
         public static bool NumLockOn()
         {
             return (((ushort)GetKeyState(0x90)) & 0xffff) != 0;
@@ -127,18 +157,12 @@ namespace low_level_sendkeys
             return (((ushort)GetKeyState(0x91)) & 0xffff) != 0;
         }
 
-        public void SendKeystroke(KeyStroke keyStroke, int keyboardNumber)
+        public bool SendKeystroke(KeyStroke keyStroke, int keyboardNumber)
         {
-            //for (int i = 0; i < 10; i++)
-            //{
-            //Console.WriteLine("Enviei keystroke: {0}, id {1}, OK: {2}", keyStroke.ToString(),i, keyboards[i].Write(keyStroke));
-                
-            //}
+            bool result = keyboards[keyboardNumber].Write(keyStroke);
+            Console.WriteLine("Enviei keystroke: {0}, id {1}, OK: {2}", keyStroke.ToString(), keyboardNumber, result);
 
-            Console.WriteLine("Enviei keystroke: {0}, id {1}, OK: {2}", keyStroke.ToString(), keyboardNumber, keyboards[keyboardNumber].Write(keyStroke));
-
-
+            return result;
         }
-
     }
 }

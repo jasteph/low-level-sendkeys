@@ -45,8 +45,25 @@
             this.SendCommands = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.TestSendKeysCommand = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.Keyboard0 = new System.Windows.Forms.Label();
+            this.Keyboard1 = new System.Windows.Forms.Label();
+            this.Keyboard2 = new System.Windows.Forms.Label();
+            this.Keyboard3 = new System.Windows.Forms.Label();
+            this.Keyboard4 = new System.Windows.Forms.Label();
+            this.Keyboard5 = new System.Windows.Forms.Label();
+            this.Keyboard6 = new System.Windows.Forms.Label();
+            this.Keyboard7 = new System.Windows.Forms.Label();
+            this.Keyboard8 = new System.Windows.Forms.Label();
+            this.Keyboard9 = new System.Windows.Forms.Label();
+            this.CheckKeyboardsCommand = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // UpdateKeyCommand
@@ -65,9 +82,9 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.treeKeys.HideSelection = false;
-            this.treeKeys.Location = new System.Drawing.Point(12, 12);
+            this.treeKeys.Location = new System.Drawing.Point(6, 6);
             this.treeKeys.Name = "treeKeys";
-            this.treeKeys.Size = new System.Drawing.Size(524, 433);
+            this.treeKeys.Size = new System.Drawing.Size(522, 390);
             this.treeKeys.TabIndex = 1;
             this.treeKeys.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeKeys_AfterSelect);
             this.treeKeys.DoubleClick += new System.EventHandler(this.treeKeys_DoubleClick);
@@ -86,7 +103,7 @@
             // SaveAsCommand
             // 
             this.SaveAsCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.SaveAsCommand.Location = new System.Drawing.Point(448, 470);
+            this.SaveAsCommand.Location = new System.Drawing.Point(442, 430);
             this.SaveAsCommand.Name = "SaveAsCommand";
             this.SaveAsCommand.Size = new System.Drawing.Size(86, 23);
             this.SaveAsCommand.TabIndex = 3;
@@ -97,7 +114,7 @@
             // LoadCommand
             // 
             this.LoadCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.LoadCommand.Location = new System.Drawing.Point(448, 499);
+            this.LoadCommand.Location = new System.Drawing.Point(442, 459);
             this.LoadCommand.Name = "LoadCommand";
             this.LoadCommand.Size = new System.Drawing.Size(86, 23);
             this.LoadCommand.TabIndex = 4;
@@ -122,7 +139,7 @@
             this.groupBox1.Controls.Add(this.AddKeyCommand);
             this.groupBox1.Controls.Add(this.RemoveKeyCommand);
             this.groupBox1.Controls.Add(this.UpdateKeyCommand);
-            this.groupBox1.Location = new System.Drawing.Point(12, 451);
+            this.groupBox1.Location = new System.Drawing.Point(6, 402);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(177, 90);
             this.groupBox1.TabIndex = 6;
@@ -145,7 +162,7 @@
             this.groupBox2.Controls.Add(this.ChangeMakeCommand);
             this.groupBox2.Controls.Add(this.AddMakeCommand);
             this.groupBox2.Controls.Add(this.RemoveMakeCommand);
-            this.groupBox2.Location = new System.Drawing.Point(195, 451);
+            this.groupBox2.Location = new System.Drawing.Point(189, 402);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(247, 90);
             this.groupBox2.TabIndex = 7;
@@ -186,7 +203,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 555);
+            this.label1.Location = new System.Drawing.Point(15, 545);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 8;
@@ -196,7 +213,7 @@
             // StartTimeout
             // 
             this.StartTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.StartTimeout.Location = new System.Drawing.Point(99, 552);
+            this.StartTimeout.Location = new System.Drawing.Point(99, 542);
             this.StartTimeout.Name = "StartTimeout";
             this.StartTimeout.Size = new System.Drawing.Size(100, 20);
             this.StartTimeout.TabIndex = 9;
@@ -205,7 +222,7 @@
             // SendCommands
             // 
             this.SendCommands.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.SendCommands.Location = new System.Drawing.Point(99, 580);
+            this.SendCommands.Location = new System.Drawing.Point(99, 570);
             this.SendCommands.Name = "SendCommands";
             this.SendCommands.Size = new System.Drawing.Size(437, 20);
             this.SendCommands.TabIndex = 11;
@@ -214,7 +231,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 583);
+            this.label2.Location = new System.Drawing.Point(15, 573);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 10;
@@ -223,7 +240,7 @@
             // TestSendKeysCommand
             // 
             this.TestSendKeysCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TestSendKeysCommand.Location = new System.Drawing.Point(205, 552);
+            this.TestSendKeysCommand.Location = new System.Drawing.Point(205, 542);
             this.TestSendKeysCommand.Name = "TestSendKeysCommand";
             this.TestSendKeysCommand.Size = new System.Drawing.Size(79, 22);
             this.TestSendKeysCommand.TabIndex = 12;
@@ -231,27 +248,183 @@
             this.TestSendKeysCommand.UseVisualStyleBackColor = true;
             this.TestSendKeysCommand.Click += new System.EventHandler(this.button1_Click);
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(12, 12);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(542, 524);
+            this.tabControl1.TabIndex = 13;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.treeKeys);
+            this.tabPage1.Controls.Add(this.SaveAsCommand);
+            this.tabPage1.Controls.Add(this.LoadCommand);
+            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Controls.Add(this.groupBox2);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(534, 498);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.CheckKeyboardsCommand);
+            this.tabPage2.Controls.Add(this.Keyboard9);
+            this.tabPage2.Controls.Add(this.Keyboard8);
+            this.tabPage2.Controls.Add(this.Keyboard7);
+            this.tabPage2.Controls.Add(this.Keyboard6);
+            this.tabPage2.Controls.Add(this.Keyboard5);
+            this.tabPage2.Controls.Add(this.Keyboard4);
+            this.tabPage2.Controls.Add(this.Keyboard3);
+            this.tabPage2.Controls.Add(this.Keyboard2);
+            this.tabPage2.Controls.Add(this.Keyboard1);
+            this.tabPage2.Controls.Add(this.Keyboard0);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(534, 498);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // Keyboard0
+            // 
+            this.Keyboard0.AutoSize = true;
+            this.Keyboard0.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard0.Location = new System.Drawing.Point(17, 20);
+            this.Keyboard0.Name = "Keyboard0";
+            this.Keyboard0.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard0.TabIndex = 0;
+            this.Keyboard0.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard1
+            // 
+            this.Keyboard1.AutoSize = true;
+            this.Keyboard1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard1.Location = new System.Drawing.Point(17, 44);
+            this.Keyboard1.Name = "Keyboard1";
+            this.Keyboard1.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard1.TabIndex = 1;
+            this.Keyboard1.Text = "Keyboard 1: Disconnected";
+            // 
+            // Keyboard2
+            // 
+            this.Keyboard2.AutoSize = true;
+            this.Keyboard2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard2.Location = new System.Drawing.Point(17, 68);
+            this.Keyboard2.Name = "Keyboard2";
+            this.Keyboard2.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard2.TabIndex = 2;
+            this.Keyboard2.Text = "Keyboard 1: Disconnected";
+            // 
+            // Keyboard3
+            // 
+            this.Keyboard3.AutoSize = true;
+            this.Keyboard3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard3.Location = new System.Drawing.Point(17, 91);
+            this.Keyboard3.Name = "Keyboard3";
+            this.Keyboard3.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard3.TabIndex = 3;
+            this.Keyboard3.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard4
+            // 
+            this.Keyboard4.AutoSize = true;
+            this.Keyboard4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard4.Location = new System.Drawing.Point(17, 113);
+            this.Keyboard4.Name = "Keyboard4";
+            this.Keyboard4.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard4.TabIndex = 4;
+            this.Keyboard4.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard5
+            // 
+            this.Keyboard5.AutoSize = true;
+            this.Keyboard5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard5.Location = new System.Drawing.Point(17, 136);
+            this.Keyboard5.Name = "Keyboard5";
+            this.Keyboard5.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard5.TabIndex = 5;
+            this.Keyboard5.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard6
+            // 
+            this.Keyboard6.AutoSize = true;
+            this.Keyboard6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard6.Location = new System.Drawing.Point(17, 161);
+            this.Keyboard6.Name = "Keyboard6";
+            this.Keyboard6.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard6.TabIndex = 6;
+            this.Keyboard6.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard7
+            // 
+            this.Keyboard7.AutoSize = true;
+            this.Keyboard7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard7.Location = new System.Drawing.Point(17, 185);
+            this.Keyboard7.Name = "Keyboard7";
+            this.Keyboard7.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard7.TabIndex = 7;
+            this.Keyboard7.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard8
+            // 
+            this.Keyboard8.AutoSize = true;
+            this.Keyboard8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard8.Location = new System.Drawing.Point(17, 209);
+            this.Keyboard8.Name = "Keyboard8";
+            this.Keyboard8.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard8.TabIndex = 8;
+            this.Keyboard8.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard9
+            // 
+            this.Keyboard9.AutoSize = true;
+            this.Keyboard9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard9.Location = new System.Drawing.Point(17, 233);
+            this.Keyboard9.Name = "Keyboard9";
+            this.Keyboard9.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard9.TabIndex = 9;
+            this.Keyboard9.Text = "Keyboard 0: Disconnected";
+            // 
+            // CheckKeyboardsCommand
+            // 
+            this.CheckKeyboardsCommand.Location = new System.Drawing.Point(220, 20);
+            this.CheckKeyboardsCommand.Name = "CheckKeyboardsCommand";
+            this.CheckKeyboardsCommand.Size = new System.Drawing.Size(110, 23);
+            this.CheckKeyboardsCommand.TabIndex = 10;
+            this.CheckKeyboardsCommand.Text = "Detect Keyboards";
+            this.CheckKeyboardsCommand.UseVisualStyleBackColor = true;
+            this.CheckKeyboardsCommand.Click += new System.EventHandler(this.CheckKeyboardsCommand_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(548, 610);
+            this.ClientSize = new System.Drawing.Size(565, 600);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.TestSendKeysCommand);
             this.Controls.Add(this.SendCommands);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.StartTimeout);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.LoadCommand);
-            this.Controls.Add(this.SaveAsCommand);
-            this.Controls.Add(this.treeKeys);
-            this.MaximumSize = new System.Drawing.Size(564, 1280);
-            this.MinimumSize = new System.Drawing.Size(564, 462);
+            this.MaximumSize = new System.Drawing.Size(573, 1280);
+            this.MinimumSize = new System.Drawing.Size(573, 462);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,6 +449,20 @@
         private System.Windows.Forms.TextBox SendCommands;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button TestSendKeysCommand;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button CheckKeyboardsCommand;
+        private System.Windows.Forms.Label Keyboard9;
+        private System.Windows.Forms.Label Keyboard8;
+        private System.Windows.Forms.Label Keyboard7;
+        private System.Windows.Forms.Label Keyboard6;
+        private System.Windows.Forms.Label Keyboard5;
+        private System.Windows.Forms.Label Keyboard4;
+        private System.Windows.Forms.Label Keyboard3;
+        private System.Windows.Forms.Label Keyboard2;
+        private System.Windows.Forms.Label Keyboard1;
+        private System.Windows.Forms.Label Keyboard0;
     }
 }
 

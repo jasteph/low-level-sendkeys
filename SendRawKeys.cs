@@ -76,11 +76,6 @@ namespace low_level_sendkeys
             }
 
             keyboardManager.ListenKeyBoard();
-            while (!keyboardManager.KeyboardListening)
-            {
-                
-            }
-
             foreach (IExecuteCommand executeCommand in executeCommands)
             {
                 executeCommand.Execute();
