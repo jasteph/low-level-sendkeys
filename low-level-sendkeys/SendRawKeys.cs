@@ -11,7 +11,7 @@ namespace low_level_sendkeys
     public static class SendRawKeys
     {
 
-        public static bool SendCommands(string commands)
+        public static bool SendKeys(string commands)
         {
             if (string.IsNullOrEmpty(commands)) return false;
 

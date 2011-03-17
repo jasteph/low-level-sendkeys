@@ -22,7 +22,7 @@ namespace low_level_sendkeys
             EnableButtons();
 
             messageManager = new MessageManager("low-levelkeys-main");
-            messageManager.MessageReceived += new MessageManager.MessageReceivedEventHandler(messageManager_MessageReceived);
+            messageManager.MessageReceived += messageManager_MessageReceived;
         }
 
         void messageManager_MessageReceived(object sender, string message)
@@ -446,7 +446,7 @@ namespace low_level_sendkeys
         private void button1_Click(object sender, EventArgs e)
         {
             Thread.Sleep(int.Parse(StartTimeout.Text));
-            SendRawKeys.SendCommands(SendCommands.Text);
+            SendRawKeys.SendKeys(SendCommands.Text);
         }
 
         private void CheckKeyboardsCommand_Click(object sender, EventArgs e)

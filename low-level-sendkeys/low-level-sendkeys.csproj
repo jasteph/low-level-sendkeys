@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comunnication\CommunicationBridge.cs" />
     <Compile Include="Comunnication\Sockets\ClienteTcp.cs" />
     <Compile Include="Comunnication\Sockets\CommandMap.cs" />
     <Compile Include="Comunnication\Sockets\MainSocket.cs" />

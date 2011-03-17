@@ -8,8 +8,6 @@ namespace low_level_sendkeys.Comunnication.Sockets
 {
     public class SocketCommandsStream
     {
-        private const string ResponseOk = "OK";
-
         private readonly TextReader _sockerReader;
         private readonly TextWriter _socketWriter;
         private readonly BitArray _commandRun;
@@ -23,29 +21,37 @@ namespace low_level_sendkeys.Comunnication.Sockets
         }
 
 
-        protected void DispatchCommand(CommandMap.Commands command, string parameters)
+        protected string DispatchCommand(CommandMap.Commands command, string parameters)
         {
             switch (command)
             {
                 case CommandMap.Commands.None:
                     break;
                 case CommandMap.Commands.Sendkeys:
-                    SendRawKeys.SendCommands(GetParams(parameters, ' ', 1)[0]);
-                    break;
+                    return CommunicationBridge.SendKeys(GetParams(parameters, ' ', 1)[0]);
                 case CommandMap.Commands.Loadfile:
                     break;
                 case CommandMap.Commands.RemapKey:
                     break;
                 case CommandMap.Commands.UnloadApplication:
-                    Application.Exit();
-                    throw new EndOfStreamException();
+                    var resp = CommunicationBridge.UnloadApplication();
+                    if (resp == CommunicationBridge.ResponseOk)
+                    {
+                        _socketWriter.WriteLine(resp);
+                        _socketWriter.Flush();
+                        throw new EndOfStreamException();
+                    }
+                    return resp;
                 case CommandMap.Commands.Quit:
+                    _socketWriter.WriteLine(CommunicationBridge.ResponseOk);
+                    _socketWriter.Flush();
                     throw new EndOfStreamException();
                 case CommandMap.Commands.Help:
                     ShowHelp();
-                    break;
+                    return CommunicationBridge.ResponseOk;
             }
-            _socketWriter.WriteLine(ResponseOk);
+
+            return (CommunicationBridge.ResponseError + " Invalid Command.");
         }
 
         public void ShowHelp()
@@ -91,7 +97,8 @@ namespace low_level_sendkeys.Comunnication.Sockets
                             throw new ArgumentException(string.Format("Unknow Command: {0}", aTokens[0]));
                         }
 
-                        DispatchCommand(command, String.Join(" ", aTokens, 1, aTokens.Length - 1));
+                        string resp = DispatchCommand(command, String.Join(" ", aTokens, 1, aTokens.Length - 1));
+                        _socketWriter.WriteLine(resp);
                     }
                     catch (ArgumentException ex)
                     {
@@ -111,7 +118,7 @@ namespace low_level_sendkeys.Comunnication.Sockets
                     }
                     catch (Exception ex)
                     {
-                        _socketWriter.WriteLine("Unknow Error: " + ex.Message);
+                        _socketWriter.WriteLine(CommunicationBridge.ResponseError + " Unknow Error: " + ex.Message);
                     }
                     _socketWriter.Flush();
                 }

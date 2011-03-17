@@ -219,7 +219,7 @@
             this.StartTimeout.TabIndex = 9;
             this.StartTimeout.Text = "3000";
             // 
-            // SendCommands
+            // SendKeys
             // 
             this.SendCommands.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SendCommands.Location = new System.Drawing.Point(99, 570);
