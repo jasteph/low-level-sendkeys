@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "low-level-sendkeys", "low-level-sendkeys.csproj", "{4E2D5F64-DF49-4222-88CC-57657A575096}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "low-level-sendkeys", "low-level-sendkeys\low-level-sendkeys.csproj", "{4E2D5F64-DF49-4222-88CC-57657A575096}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketTesteConnection", "SocketTesteConnection\SocketTesteConnection.csproj", "{43B8A3FC-F399-4851-BC70-7D978EF7F597}"
 EndProject
