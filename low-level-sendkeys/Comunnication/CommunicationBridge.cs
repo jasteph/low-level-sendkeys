@@ -17,12 +17,7 @@ namespace low_level_sendkeys.Comunnication
 
         public static string SendKeys(string keys)
         {
-            var resp = SendRawKeys.SendKeys(keys);
-            if (resp)
-            {
-                return ResponseOk;
-            }
-            return string.Format("{0} {1}", ResponseError, "SendKeys did not responded");
+            return SendRawKeys.SendKeys(keys);
         }
 
         public static string UnloadApplication()

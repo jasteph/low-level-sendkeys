@@ -40,25 +40,23 @@
             this.ChangeMakeCommand = new System.Windows.Forms.Button();
             this.AddMakeCommand = new System.Windows.Forms.Button();
             this.RemoveMakeCommand = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.StartTimeout = new System.Windows.Forms.TextBox();
             this.SendCommands = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.TestSendKeysCommand = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.Keyboard0 = new System.Windows.Forms.Label();
-            this.Keyboard1 = new System.Windows.Forms.Label();
-            this.Keyboard2 = new System.Windows.Forms.Label();
-            this.Keyboard3 = new System.Windows.Forms.Label();
-            this.Keyboard4 = new System.Windows.Forms.Label();
-            this.Keyboard5 = new System.Windows.Forms.Label();
-            this.Keyboard6 = new System.Windows.Forms.Label();
-            this.Keyboard7 = new System.Windows.Forms.Label();
-            this.Keyboard8 = new System.Windows.Forms.Label();
-            this.Keyboard9 = new System.Windows.Forms.Label();
             this.CheckKeyboardsCommand = new System.Windows.Forms.Button();
+            this.Keyboard9 = new System.Windows.Forms.Label();
+            this.Keyboard8 = new System.Windows.Forms.Label();
+            this.Keyboard7 = new System.Windows.Forms.Label();
+            this.Keyboard6 = new System.Windows.Forms.Label();
+            this.Keyboard5 = new System.Windows.Forms.Label();
+            this.Keyboard4 = new System.Windows.Forms.Label();
+            this.Keyboard3 = new System.Windows.Forms.Label();
+            this.Keyboard2 = new System.Windows.Forms.Label();
+            this.Keyboard1 = new System.Windows.Forms.Label();
+            this.Keyboard0 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -199,39 +197,19 @@
             this.RemoveMakeCommand.UseVisualStyleBackColor = true;
             this.RemoveMakeCommand.Click += new System.EventHandler(this.RemoveMakeCommand_Click);
             // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 545);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(73, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Start Timeout:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // StartTimeout
-            // 
-            this.StartTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.StartTimeout.Location = new System.Drawing.Point(99, 542);
-            this.StartTimeout.Name = "StartTimeout";
-            this.StartTimeout.Size = new System.Drawing.Size(100, 20);
-            this.StartTimeout.TabIndex = 9;
-            this.StartTimeout.Text = "3000";
-            // 
-            // SendKeys
+            // SendCommands
             // 
             this.SendCommands.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.SendCommands.Location = new System.Drawing.Point(99, 570);
+            this.SendCommands.Location = new System.Drawing.Point(78, 542);
             this.SendCommands.Name = "SendCommands";
-            this.SendCommands.Size = new System.Drawing.Size(437, 20);
+            this.SendCommands.Size = new System.Drawing.Size(390, 20);
             this.SendCommands.TabIndex = 11;
             // 
             // label2
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 573);
+            this.label2.Location = new System.Drawing.Point(13, 545);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 10;
@@ -240,9 +218,9 @@
             // TestSendKeysCommand
             // 
             this.TestSendKeysCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TestSendKeysCommand.Location = new System.Drawing.Point(205, 542);
+            this.TestSendKeysCommand.Location = new System.Drawing.Point(481, 540);
             this.TestSendKeysCommand.Name = "TestSendKeysCommand";
-            this.TestSendKeysCommand.Size = new System.Drawing.Size(79, 22);
+            this.TestSendKeysCommand.Size = new System.Drawing.Size(73, 22);
             this.TestSendKeysCommand.TabIndex = 12;
             this.TestSendKeysCommand.Text = "SendKeys";
             this.TestSendKeysCommand.UseVisualStyleBackColor = true;
@@ -250,6 +228,9 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
@@ -294,95 +275,15 @@
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // Keyboard0
+            // CheckKeyboardsCommand
             // 
-            this.Keyboard0.AutoSize = true;
-            this.Keyboard0.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Keyboard0.Location = new System.Drawing.Point(17, 20);
-            this.Keyboard0.Name = "Keyboard0";
-            this.Keyboard0.Size = new System.Drawing.Size(157, 13);
-            this.Keyboard0.TabIndex = 0;
-            this.Keyboard0.Text = "Keyboard 0: Disconnected";
-            // 
-            // Keyboard1
-            // 
-            this.Keyboard1.AutoSize = true;
-            this.Keyboard1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Keyboard1.Location = new System.Drawing.Point(17, 44);
-            this.Keyboard1.Name = "Keyboard1";
-            this.Keyboard1.Size = new System.Drawing.Size(157, 13);
-            this.Keyboard1.TabIndex = 1;
-            this.Keyboard1.Text = "Keyboard 1: Disconnected";
-            // 
-            // Keyboard2
-            // 
-            this.Keyboard2.AutoSize = true;
-            this.Keyboard2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Keyboard2.Location = new System.Drawing.Point(17, 68);
-            this.Keyboard2.Name = "Keyboard2";
-            this.Keyboard2.Size = new System.Drawing.Size(157, 13);
-            this.Keyboard2.TabIndex = 2;
-            this.Keyboard2.Text = "Keyboard 1: Disconnected";
-            // 
-            // Keyboard3
-            // 
-            this.Keyboard3.AutoSize = true;
-            this.Keyboard3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Keyboard3.Location = new System.Drawing.Point(17, 91);
-            this.Keyboard3.Name = "Keyboard3";
-            this.Keyboard3.Size = new System.Drawing.Size(157, 13);
-            this.Keyboard3.TabIndex = 3;
-            this.Keyboard3.Text = "Keyboard 0: Disconnected";
-            // 
-            // Keyboard4
-            // 
-            this.Keyboard4.AutoSize = true;
-            this.Keyboard4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Keyboard4.Location = new System.Drawing.Point(17, 113);
-            this.Keyboard4.Name = "Keyboard4";
-            this.Keyboard4.Size = new System.Drawing.Size(157, 13);
-            this.Keyboard4.TabIndex = 4;
-            this.Keyboard4.Text = "Keyboard 0: Disconnected";
-            // 
-            // Keyboard5
-            // 
-            this.Keyboard5.AutoSize = true;
-            this.Keyboard5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Keyboard5.Location = new System.Drawing.Point(17, 136);
-            this.Keyboard5.Name = "Keyboard5";
-            this.Keyboard5.Size = new System.Drawing.Size(157, 13);
-            this.Keyboard5.TabIndex = 5;
-            this.Keyboard5.Text = "Keyboard 0: Disconnected";
-            // 
-            // Keyboard6
-            // 
-            this.Keyboard6.AutoSize = true;
-            this.Keyboard6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Keyboard6.Location = new System.Drawing.Point(17, 161);
-            this.Keyboard6.Name = "Keyboard6";
-            this.Keyboard6.Size = new System.Drawing.Size(157, 13);
-            this.Keyboard6.TabIndex = 6;
-            this.Keyboard6.Text = "Keyboard 0: Disconnected";
-            // 
-            // Keyboard7
-            // 
-            this.Keyboard7.AutoSize = true;
-            this.Keyboard7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Keyboard7.Location = new System.Drawing.Point(17, 185);
-            this.Keyboard7.Name = "Keyboard7";
-            this.Keyboard7.Size = new System.Drawing.Size(157, 13);
-            this.Keyboard7.TabIndex = 7;
-            this.Keyboard7.Text = "Keyboard 0: Disconnected";
-            // 
-            // Keyboard8
-            // 
-            this.Keyboard8.AutoSize = true;
-            this.Keyboard8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Keyboard8.Location = new System.Drawing.Point(17, 209);
-            this.Keyboard8.Name = "Keyboard8";
-            this.Keyboard8.Size = new System.Drawing.Size(157, 13);
-            this.Keyboard8.TabIndex = 8;
-            this.Keyboard8.Text = "Keyboard 0: Disconnected";
+            this.CheckKeyboardsCommand.Location = new System.Drawing.Point(220, 20);
+            this.CheckKeyboardsCommand.Name = "CheckKeyboardsCommand";
+            this.CheckKeyboardsCommand.Size = new System.Drawing.Size(110, 23);
+            this.CheckKeyboardsCommand.TabIndex = 10;
+            this.CheckKeyboardsCommand.Text = "Detect Keyboards";
+            this.CheckKeyboardsCommand.UseVisualStyleBackColor = true;
+            this.CheckKeyboardsCommand.Click += new System.EventHandler(this.CheckKeyboardsCommand_Click);
             // 
             // Keyboard9
             // 
@@ -394,15 +295,95 @@
             this.Keyboard9.TabIndex = 9;
             this.Keyboard9.Text = "Keyboard 0: Disconnected";
             // 
-            // CheckKeyboardsCommand
+            // Keyboard8
             // 
-            this.CheckKeyboardsCommand.Location = new System.Drawing.Point(220, 20);
-            this.CheckKeyboardsCommand.Name = "CheckKeyboardsCommand";
-            this.CheckKeyboardsCommand.Size = new System.Drawing.Size(110, 23);
-            this.CheckKeyboardsCommand.TabIndex = 10;
-            this.CheckKeyboardsCommand.Text = "Detect Keyboards";
-            this.CheckKeyboardsCommand.UseVisualStyleBackColor = true;
-            this.CheckKeyboardsCommand.Click += new System.EventHandler(this.CheckKeyboardsCommand_Click);
+            this.Keyboard8.AutoSize = true;
+            this.Keyboard8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard8.Location = new System.Drawing.Point(17, 209);
+            this.Keyboard8.Name = "Keyboard8";
+            this.Keyboard8.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard8.TabIndex = 8;
+            this.Keyboard8.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard7
+            // 
+            this.Keyboard7.AutoSize = true;
+            this.Keyboard7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard7.Location = new System.Drawing.Point(17, 185);
+            this.Keyboard7.Name = "Keyboard7";
+            this.Keyboard7.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard7.TabIndex = 7;
+            this.Keyboard7.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard6
+            // 
+            this.Keyboard6.AutoSize = true;
+            this.Keyboard6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard6.Location = new System.Drawing.Point(17, 161);
+            this.Keyboard6.Name = "Keyboard6";
+            this.Keyboard6.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard6.TabIndex = 6;
+            this.Keyboard6.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard5
+            // 
+            this.Keyboard5.AutoSize = true;
+            this.Keyboard5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard5.Location = new System.Drawing.Point(17, 136);
+            this.Keyboard5.Name = "Keyboard5";
+            this.Keyboard5.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard5.TabIndex = 5;
+            this.Keyboard5.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard4
+            // 
+            this.Keyboard4.AutoSize = true;
+            this.Keyboard4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard4.Location = new System.Drawing.Point(17, 113);
+            this.Keyboard4.Name = "Keyboard4";
+            this.Keyboard4.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard4.TabIndex = 4;
+            this.Keyboard4.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard3
+            // 
+            this.Keyboard3.AutoSize = true;
+            this.Keyboard3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard3.Location = new System.Drawing.Point(17, 91);
+            this.Keyboard3.Name = "Keyboard3";
+            this.Keyboard3.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard3.TabIndex = 3;
+            this.Keyboard3.Text = "Keyboard 0: Disconnected";
+            // 
+            // Keyboard2
+            // 
+            this.Keyboard2.AutoSize = true;
+            this.Keyboard2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard2.Location = new System.Drawing.Point(17, 68);
+            this.Keyboard2.Name = "Keyboard2";
+            this.Keyboard2.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard2.TabIndex = 2;
+            this.Keyboard2.Text = "Keyboard 1: Disconnected";
+            // 
+            // Keyboard1
+            // 
+            this.Keyboard1.AutoSize = true;
+            this.Keyboard1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard1.Location = new System.Drawing.Point(17, 44);
+            this.Keyboard1.Name = "Keyboard1";
+            this.Keyboard1.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard1.TabIndex = 1;
+            this.Keyboard1.Text = "Keyboard 1: Disconnected";
+            // 
+            // Keyboard0
+            // 
+            this.Keyboard0.AutoSize = true;
+            this.Keyboard0.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Keyboard0.Location = new System.Drawing.Point(17, 20);
+            this.Keyboard0.Name = "Keyboard0";
+            this.Keyboard0.Size = new System.Drawing.Size(157, 13);
+            this.Keyboard0.TabIndex = 0;
+            this.Keyboard0.Text = "Keyboard 0: Disconnected";
             // 
             // MainForm
             // 
@@ -413,8 +394,6 @@
             this.Controls.Add(this.TestSendKeysCommand);
             this.Controls.Add(this.SendCommands);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.StartTimeout);
-            this.Controls.Add(this.label1);
             this.MaximumSize = new System.Drawing.Size(573, 1280);
             this.MinimumSize = new System.Drawing.Size(573, 462);
             this.Name = "MainForm";
@@ -444,8 +423,6 @@
         private System.Windows.Forms.Button ChangeMakeCommand;
         private System.Windows.Forms.Button AddMakeCommand;
         private System.Windows.Forms.Button RemoveMakeCommand;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox StartTimeout;
         private System.Windows.Forms.TextBox SendCommands;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button TestSendKeysCommand;

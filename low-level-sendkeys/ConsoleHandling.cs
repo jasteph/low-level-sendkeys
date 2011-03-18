@@ -99,7 +99,7 @@ namespace low_level_sendkeys
 
         internal static void ReleaseConsoleHandles()
         {
-            System.Windows.Forms.SendKeys.SendWait("{ENTER}");
+            //System.Windows.Forms.SendKeys.SendWait("{ENTER}");
             FreeConsole();
         }
     }

@@ -37,7 +37,7 @@ namespace low_level_sendkeys
                 case CommandMap.Commands.Help:
                 case CommandMap.Commands.Loadfile:
                     e.Response = CommunicationBridge.ResponseError + " Not implemented yet";
-                break;
+                    break;
 
                 case CommandMap.Commands.Quit:
                     e.Response = CommunicationBridge.ResponseError + " Command invalid on this context.";
@@ -475,8 +475,7 @@ namespace low_level_sendkeys
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Thread.Sleep(int.Parse(StartTimeout.Text));
-            SendRawKeys.SendKeys(SendCommands.Text);
+            SendRawKeys.SendKeys(SendCommands.Text, false);
         }
 
         private void CheckKeyboardsCommand_Click(object sender, EventArgs e)

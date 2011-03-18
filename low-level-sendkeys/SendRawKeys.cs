@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using low_level_sendkeys.KernelHotkey;
 using System.Threading;
 using low_level_sendkeys.Keys;
+using low_level_sendkeys.Comunnication;
 
 namespace low_level_sendkeys
 {
     public static class SendRawKeys
     {
         static KeyboardManager keyboardManager = new KeyboardManager();
+
+        private static readonly object LockSendKeys = new object();
+        private static bool _executingCommands = false;
 
         public static void StartService()
         {
@@ -21,9 +26,18 @@ namespace low_level_sendkeys
             keyboardManager.StopListenKeyBoard();
         }
 
-        public static bool SendKeys(string commands)
+        public static string SendKeys(string commands)
         {
-            if (string.IsNullOrEmpty(commands)) return false;
+            return SendKeys(commands, true);
+        }
+        public static string SendKeys(string commands, bool waitFinish)
+        {
+            const string sendKeysErrorPrefix = CommunicationBridge.ResponseError + "SendKeys not executed. Reason: ";
+            if (string.IsNullOrEmpty(commands))
+            {
+
+                return sendKeysErrorPrefix + "No command was informed.";
+            }
 
             int startIndex = 0;
             int kbdIndex = 0;
@@ -57,24 +71,28 @@ namespace low_level_sendkeys
                     bool sendDown = true;
                     bool sendUp = true;
 
-                    if (textValue.EndsWith("_DOWN", StringComparison.InvariantCultureIgnoreCase))
+                    if (textValue.Length > 1 &&  textValue.StartsWith("-"))
                     {
-                        keyName = textValue.Substring(0, textValue.Length - 5);
+                        keyName = textValue.Substring(1);
                         sendUp = false;
                     }
-                    if (textValue.EndsWith("_UP", StringComparison.InvariantCultureIgnoreCase))
+                    if (textValue.Length > 1 && textValue.StartsWith("+"))
                     {
-                        keyName = textValue.Substring(0, textValue.Length - 3);
+                        keyName = textValue.Substring(1);
                         sendDown = false;
                     }
 
                     var currentKey = KeyManager.Keys.SingleOrDefault(k => k.Name.Equals(keyName, StringComparison.InvariantCultureIgnoreCase));
-                    if (currentKey == null) return false;
+                    if (currentKey == null)
+                    {
+
+                        return sendKeysErrorPrefix + string.Format(" The command '{0}' does not exist.", keyName);
+                    }
 
                     if (sendDown)
                     {
                         executeCommands.AddRange(currentKey.KeyDownStrokes.Select(keyDownStroke => new SendMakeCommand(keyDownStroke, keyboardManager, kbdIndex)).Cast<IExecuteCommand>());
-                    }    
+                    }
 
                     if (sendUp)
                     {
@@ -83,16 +101,30 @@ namespace low_level_sendkeys
                 }
             }
 
-            keyboardManager.ListenKeyBoard();
-            foreach (IExecuteCommand executeCommand in executeCommands)
+            lock (LockSendKeys)
             {
-                executeCommand.Execute();
-                Thread.Sleep(5);
+                Debug.WriteLine("ENTROU");
+                var threadExecute = new Thread(
+                  delegate()
+                  {
+                      while (_executingCommands)
+                      {
+                          Thread.Sleep(100);
+                      }
+                      _executingCommands = true;
+                      foreach (IExecuteCommand executeCommand in executeCommands)
+                      {
+                          executeCommand.Execute();
+                          Thread.Sleep(5);
+                      }
+                      _executingCommands = false;
+                  });
+
+                threadExecute.Start();
+                if (waitFinish) threadExecute.Join();
             }
-            keyboardManager.StopListenKeyBoard();
 
-
-            return true;
+            return CommunicationBridge.ResponseOk;
         }
 
 
