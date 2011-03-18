@@ -31,7 +31,7 @@ namespace low_level_sendkeys.Comunnication.Sockets
                 case CommandMap.Commands.Loadfile:
                     break;
                 case CommandMap.Commands.RemapKey:
-                    break;
+                    return CommunicationBridge.ResponseError + " This command if not implemented yet";
                 case CommandMap.Commands.UnloadApplication:
                     var resp = CommunicationBridge.UnloadApplication();
                     if (resp == CommunicationBridge.ResponseOk)
@@ -41,13 +41,28 @@ namespace low_level_sendkeys.Comunnication.Sockets
                         throw new EndOfStreamException();
                     }
                     return resp;
+
+                case CommandMap.Commands.SendToTray:
+                    return CommunicationBridge.SendMainWindowToTray();
+
+                case CommandMap.Commands.RestoreWindow:
+                    return CommunicationBridge.RestoreMainWindowsFromTray();
+
+                case CommandMap.Commands.StartSocketServer:
+                    return CommunicationBridge.StartSocketServer();
+
+                case CommandMap.Commands.StopSocketServer:
+                    return CommunicationBridge.StopSocketServer();
+
                 case CommandMap.Commands.Quit:
                     _socketWriter.WriteLine(CommunicationBridge.ResponseOk);
                     _socketWriter.Flush();
                     throw new EndOfStreamException();
+
                 case CommandMap.Commands.Help:
                     ShowHelp();
                     return CommunicationBridge.ResponseOk;
+
                 case CommandMap.Commands.ListKeys:
                     return CommunicationBridge.ListKeys();
 
@@ -58,14 +73,8 @@ namespace low_level_sendkeys.Comunnication.Sockets
 
         public void ShowHelp()
         {
-            _socketWriter.WriteLine("LISTKEYS");
-            _socketWriter.WriteLine("SENDKEYS");
-            _socketWriter.WriteLine("LOADFILE");
-            _socketWriter.WriteLine("REMAPKEY");
-            _socketWriter.WriteLine("UNLOADAPPLICATION");
-            _socketWriter.WriteLine("QUIT");
-            _socketWriter.WriteLine("HELP");
-            _socketWriter.WriteLine("?");
+            _socketWriter.WriteLine("Avaliable Commands:");
+            _socketWriter.WriteLine(CommandMap.ListCommands());
             _socketWriter.WriteLine();
         }
 

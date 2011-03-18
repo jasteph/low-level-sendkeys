@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Text;
 
 namespace low_level_sendkeys.Comunnication
 {
@@ -13,6 +14,10 @@ namespace low_level_sendkeys.Comunnication
             Loadfile,
             RemapKey,
             UnloadApplication,
+            SendToTray,
+            RestoreWindow,
+            StartSocketServer,
+            StopSocketServer,
             Quit,
             Help // Tem que ser sempre o maior valor do enum !!!
         };
@@ -38,9 +43,24 @@ namespace low_level_sendkeys.Comunnication
             CommandsMap["LOADFILE"] = Commands.Loadfile;
             CommandsMap["REMAPKEY"] = Commands.RemapKey;
             CommandsMap["UNLOADAPPLICATION"] = Commands.UnloadApplication;
+            CommandsMap["SENDTOTRAY"] = Commands.SendToTray;
+            CommandsMap["RESTOREWINDOW"] = Commands.RestoreWindow;
+            CommandsMap["STARTSOCKETSERVER"] = Commands.StartSocketServer;
+            CommandsMap["STOPSOCKETSERVER"] = Commands.StopSocketServer;
             CommandsMap["QUIT"] = Commands.Quit;
             CommandsMap["HELP"] = Commands.Help;
             CommandsMap["?"] = Commands.Help;
+        }
+
+        public static string ListCommands()
+        {
+            var sb = new StringBuilder();
+            foreach (DictionaryEntry entry in CommandsMap)
+            {
+                sb.AppendLine(entry.Key.ToString());
+            }
+
+            return sb.ToString();
         }
 
     }

@@ -12,7 +12,6 @@ namespace low_level_sendkeys
 {
     public partial class MainForm : Form
     {
-        private MessageManager messageManager;
 
         public MainForm()
         {
@@ -21,45 +20,7 @@ namespace low_level_sendkeys
             KeyManager.Keys.ForEach(AddKeyNode);
 
             EnableButtons();
-
-            messageManager = new MessageManager("low-levelkeys-main");
-            messageManager.MessageReceived += messageManager_MessageReceived;
         }
-
-        void messageManager_MessageReceived(object sender, MessageReceivedEventArgs e)
-        {
-            string[] tokens = e.Message.Split(' ');
-            bool hasParans = tokens.Length > 1;
-            CommandMap.Commands command = CommandMap.FindCommand(tokens[0]);
-
-            switch (command)
-            {
-                case CommandMap.Commands.Help:
-                case CommandMap.Commands.Loadfile:
-                    e.Response = CommunicationBridge.ResponseError + " Not implemented yet";
-                    break;
-
-                case CommandMap.Commands.Quit:
-                    e.Response = CommunicationBridge.ResponseError + " Command invalid on this context.";
-                    break;
-                case CommandMap.Commands.UnloadApplication:
-                    e.Response = CommunicationBridge.UnloadApplication();
-                    break;
-                case CommandMap.Commands.Sendkeys:
-                    if (hasParans)
-                    {
-                        e.Response = CommunicationBridge.SendKeys(string.Join(" ", tokens.Skip(1).ToArray()));
-                    }
-                    break;
-                case CommandMap.Commands.ListKeys:
-                    e.Response = CommunicationBridge.ListKeys();
-                    return;
-                default:
-                    e.Response = CommunicationBridge.ResponseError + " Unknow command: " + tokens[0];
-                    break;
-            }
-        }
-
 
         private void RemoveKeyCommand_Click(object sender, EventArgs e)
         {
@@ -468,11 +429,6 @@ namespace low_level_sendkeys
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             SendRawKeys.SendKeys(SendCommands.Text, false);
@@ -489,5 +445,50 @@ namespace low_level_sendkeys
             }
         }
 
+        private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            RestoreWindow();
+        }
+
+        private void TrayIconContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.Name == "CloseApplicationContextMenu")
+            {
+                CommunicationBridge.UnloadApplication();
+            }
+        }
+
+        private void MinimizeToTrayCommand_Click(object sender, EventArgs e)
+        {
+            MinimizeToTray();
+        }
+
+        public void RestoreWindow()
+        {
+            TrayIcon.Visible = false;
+            Show();
+        }
+
+        public void MinimizeToTray()
+        {
+            TrayIcon.Visible = true;
+            Hide();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (TrayIcon.Visible)
+            {
+                Hide();
+            }
+        }
+
+        protected override void SetVisibleCore(bool value)
+        {
+            if (TrayIcon.Visible) value = false;
+            base.SetVisibleCore(value);
+        }
     }
 }

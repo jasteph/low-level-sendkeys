@@ -55,7 +55,7 @@ namespace low_level_sendkeys
 
             if (!options.Quit && firstInstance)
             {
-                StartMainInstance();
+                StartMainInstance(options);
             }
             else
             {
@@ -77,21 +77,31 @@ namespace low_level_sendkeys
             Application.Exit();
         }
 
-        private static void StartMainInstance()
+        private static void StartMainInstance(CommandLineOptions options)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            var mainForm = new MainForm();
+            CommunicationBridge.SetMainWindow(mainForm);
 
             KeyManager.LoadKeyListFromDisk();
 
             KeyboardManager.RefreshFirstActiveKeyboard();
             SendRawKeys.StartService();
-            SocketConnection.StartSocketServer();
 
-            Application.Run(new MainForm());
+            Win32Connection.StartService();
+            if (options.StartSocketServer) SocketConnection.StartSocketServer();
 
-            KeyManager.SaveKeyListToDisk();
+            if (options.Minimized)
+            {
+                mainForm.MinimizeToTray();
+            }
+            Application.Run(mainForm);
+
             SocketConnection.StopSocketServer();
+            Win32Connection.StopService();
+            KeyManager.SaveKeyListToDisk();
             SendRawKeys.StopService();
         }
 
@@ -99,21 +109,14 @@ namespace low_level_sendkeys
         {
             const string mainContainrName = "low-levelkeys-main";
 
-            var messageContainer = new MessageManager("low-levelkeys-sencond-instance");
+            var messageContainer = new MessageManager("low-levelkeys-second-instance");
             var exists = messageContainer.CheckMessageContainer(mainContainrName);
             if (exists)
             {
                 if (!string.IsNullOrEmpty(options.SendKeys))
                 {
                     var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "SENDKEYS " + options.SendKeys);
-                    if (result == CommunicationBridge.ResponseOk)
-                    {
-                        Console.WriteLine("Keys sent sucefully");
-                    }
-                    else
-                    {
-                        Console.WriteLine(result);
-                    }
+                    Console.WriteLine(result == CommunicationBridge.ResponseOk ? "Keys sent sucefully" : result);
                 }
 
                 if (options.ListKeys)
@@ -122,6 +125,37 @@ namespace low_level_sendkeys
                     Console.WriteLine("ListKeys response:");
                     Console.WriteLine(result);
                 }
+
+                if (options.Minimized)
+                {
+                    var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "SENDTOTRAY");
+                    Console.WriteLine(result == CommunicationBridge.ResponseOk ? "Application minimized to tray." : result);
+                }
+
+                if (options.Restore)
+                {
+                    var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "RESTOREWINDOW");
+                    Console.WriteLine(result == CommunicationBridge.ResponseOk ? "Application main window restored." : result);
+                }
+
+                if (options.StartSocketServer)
+                {
+                    var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "STARTSOCKETSERVER");
+                    Console.WriteLine(result == CommunicationBridge.ResponseOk ? "Socket server started." : result);
+                }
+
+                if (options.StopSocketServer)
+                {
+                    var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "STOPSOCKETSERVER");
+                    Console.WriteLine(result == CommunicationBridge.ResponseOk ? "Socket server stopped." : result);
+                }
+
+                if (options.Quit)
+                {
+                    var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "UNLOADAPPLICATION");
+                    Console.WriteLine(result == CommunicationBridge.ResponseOk ? "Application unloaded." : result);
+                }
+
             }
             else
             {

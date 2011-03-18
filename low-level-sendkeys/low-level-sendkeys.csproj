@@ -62,6 +62,7 @@
     <Compile Include="Comunnication\Win32Api\MessageManager.Designer.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="Comunnication\Win32Api\Win32Connection.cs" />
     <Compile Include="Comunnication\Win32Api\Win32SupportCode.cs" />
     <Compile Include="ConsoleHandling.cs" />
     <Compile Include="InputKeyName.cs">

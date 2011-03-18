@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -9,23 +7,22 @@ namespace low_level_sendkeys.Comunnication
     {
         public const string ResponseOk = "OK";
         public const string ResponseError = "#ERROR#";
-        private static MainForm GetMainForm()
-        {
-            return Application.OpenForms.OfType<MainForm>().FirstOrDefault();
-        }
-
+        private static MainForm _mainWindow;
 
         public static string SendKeys(string keys)
         {
             return SendRawKeys.SendKeys(keys);
         }
 
+        public static void SetMainWindow(MainForm mainWindow)
+        {
+            _mainWindow = mainWindow;
+        }
         public static string UnloadApplication()
         {
-            MainForm form = GetMainForm();
-            if (form != null)
+            if (_mainWindow != null)
             {
-                form.Close();
+                _mainWindow.Close();
             }
             Application.Exit();
 
@@ -61,6 +58,26 @@ namespace low_level_sendkeys.Comunnication
             }
 
             Sockets.SocketConnection.StopSocketServer();
+            return ResponseOk;
+        }
+
+        public static string SendMainWindowToTray()
+        {
+            if (_mainWindow == null)
+            {
+                return ResponseError + " MainWindow not found.";
+            }
+            _mainWindow.MinimizeToTray();
+            return ResponseOk;
+        }
+
+        public static string RestoreMainWindowsFromTray()
+        {
+            if (_mainWindow == null)
+            {
+                return ResponseError + " MainWindow not found.";
+            }
+            _mainWindow.RestoreWindow();
             return ResponseOk;
         }
     }

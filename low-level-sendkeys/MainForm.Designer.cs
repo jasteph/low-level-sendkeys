@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.UpdateKeyCommand = new System.Windows.Forms.Button();
             this.treeKeys = new System.Windows.Forms.TreeView();
             this.AddKeyCommand = new System.Windows.Forms.Button();
@@ -57,11 +59,16 @@
             this.Keyboard2 = new System.Windows.Forms.Label();
             this.Keyboard1 = new System.Windows.Forms.Label();
             this.Keyboard0 = new System.Windows.Forms.Label();
+            this.TrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.TrayIconContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.CloseApplicationContextMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.MinimizeToTrayCommand = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.TrayIconContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // UpdateKeyCommand
@@ -385,11 +392,45 @@
             this.Keyboard0.TabIndex = 0;
             this.Keyboard0.Text = "Keyboard 0: Disconnected";
             // 
+            // TrayIcon
+            // 
+            this.TrayIcon.ContextMenuStrip = this.TrayIconContextMenu;
+            this.TrayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("TrayIcon.Icon")));
+            this.TrayIcon.Text = "Low Level SendKeys";
+            this.TrayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseDoubleClick);
+            // 
+            // TrayIconContextMenu
+            // 
+            this.TrayIconContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CloseApplicationContextMenu});
+            this.TrayIconContextMenu.Name = "TrayIconContextMenu";
+            this.TrayIconContextMenu.Size = new System.Drawing.Size(168, 26);
+            this.TrayIconContextMenu.Text = "Teste";
+            this.TrayIconContextMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.TrayIconContextMenu_ItemClicked);
+            // 
+            // CloseApplicationContextMenu
+            // 
+            this.CloseApplicationContextMenu.Name = "CloseApplicationContextMenu";
+            this.CloseApplicationContextMenu.Size = new System.Drawing.Size(167, 22);
+            this.CloseApplicationContextMenu.Text = "Close Application";
+            // 
+            // MinimizeToTrayCommand
+            // 
+            this.MinimizeToTrayCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MinimizeToTrayCommand.Location = new System.Drawing.Point(438, 568);
+            this.MinimizeToTrayCommand.Name = "MinimizeToTrayCommand";
+            this.MinimizeToTrayCommand.Size = new System.Drawing.Size(116, 22);
+            this.MinimizeToTrayCommand.TabIndex = 15;
+            this.MinimizeToTrayCommand.Text = "Minimize to Tray";
+            this.MinimizeToTrayCommand.UseVisualStyleBackColor = true;
+            this.MinimizeToTrayCommand.Click += new System.EventHandler(this.MinimizeToTrayCommand_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 600);
+            this.ClientSize = new System.Drawing.Size(557, 600);
+            this.Controls.Add(this.MinimizeToTrayCommand);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.TestSendKeysCommand);
             this.Controls.Add(this.SendCommands);
@@ -404,6 +445,7 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.TrayIconContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -440,6 +482,10 @@
         private System.Windows.Forms.Label Keyboard2;
         private System.Windows.Forms.Label Keyboard1;
         private System.Windows.Forms.Label Keyboard0;
+        private System.Windows.Forms.NotifyIcon TrayIcon;
+        private System.Windows.Forms.ContextMenuStrip TrayIconContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem CloseApplicationContextMenu;
+        private System.Windows.Forms.Button MinimizeToTrayCommand;
     }
 }
 

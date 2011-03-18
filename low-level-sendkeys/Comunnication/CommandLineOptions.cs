@@ -10,19 +10,29 @@ namespace low_level_sendkeys.Comunnication
     public sealed class CommandLineOptions
     {
         #region Standard Option Attribute
+
         [Option("s", "sendkeys", Required = false, HelpText = "Keys sequence to send.")]
         public string SendKeys = String.Empty;
 
-        [Option(null, "close", HelpText = "Clone the alread running instance")]
+        [Option("c", "close", HelpText = "Clone the alread running instance")]
         public bool CloseInstance=false;
-
-        [Option(null, "nosocket", HelpText = "Do not start the socket server")]
-        public bool NoSocket = false;
 
         [Option("l", "listkeys", HelpText = "List all avaliable keys")]
         public bool ListKeys = false;
 
-        [Option(null, "quit", HelpText = "Do not keep application in memory. This option will run it in commandline mode, process and quit.")]
+        [Option("m", "minimize", HelpText = "Start application minimized or minime a current runnig instance")]
+        public bool Minimized = false;
+
+        [Option("r", "restore", HelpText = "Restore the main window of a minimized running instance")]
+        public bool Restore = false;
+
+        [Option("v", "StartSocketServer", HelpText = "Start socket server")]
+        public bool StartSocketServer = false;
+
+        [Option("b", "StopSocketServer", HelpText = "Stop socket server")]
+        public bool StopSocketServer = false;
+
+        [Option("q", "quit", HelpText = "Do not keep application in memory. This option will run it in commandline mode, process and quit.")]
         public bool Quit = false;
 
         #endregion
