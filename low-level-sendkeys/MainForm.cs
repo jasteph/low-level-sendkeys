@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-using low_level_sendkeys.Comunnication.Win32Api;
 using low_level_sendkeys.Keys;
 using low_level_sendkeys.Properties;
 using low_level_sendkeys.KernelHotkey;
-using System.Threading;
 using low_level_sendkeys.Comunnication;
 
 namespace low_level_sendkeys
@@ -436,6 +434,12 @@ namespace low_level_sendkeys
 
         private void CheckKeyboardsCommand_Click(object sender, EventArgs e)
         {
+            KeyboardManager.RefreshFirstActiveKeyboard();
+            FillConnectedKeyaboards();
+        }
+
+        private void FillConnectedKeyaboards()
+        {
             var keyboardStatus = KeyboardManager.GetConnectedKeyboard();
 
             for (int i = 0; i < keyboardStatus.Count; i++)
@@ -473,16 +477,6 @@ namespace low_level_sendkeys
         {
             TrayIcon.Visible = true;
             Hide();
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            if (TrayIcon.Visible)
-            {
-                Hide();
-            }
         }
 
         protected override void SetVisibleCore(bool value)

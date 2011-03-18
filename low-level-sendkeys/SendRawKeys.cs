@@ -71,12 +71,12 @@ namespace low_level_sendkeys
                     bool sendDown = true;
                     bool sendUp = true;
 
-                    if (textValue.Length > 1 &&  textValue.StartsWith("-"))
+                    if (textValue.Length > 1 &&  textValue.StartsWith("+"))
                     {
                         keyName = textValue.Substring(1);
                         sendUp = false;
                     }
-                    if (textValue.Length > 1 && textValue.StartsWith("+"))
+                    if (textValue.Length > 1 && textValue.StartsWith("-"))
                     {
                         keyName = textValue.Substring(1);
                         sendDown = false;
