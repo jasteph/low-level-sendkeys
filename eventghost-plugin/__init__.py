@@ -21,13 +21,14 @@
 # $LastChangedBy: Bitmonster $
 
 import eg
+import traceback
 
 eg.RegisterPlugin(
-    name = "Low Level Sendkeys Communication",
-    version = "1.0." + "$LastChangedRevision: 1083 $".split()[1],
-    author = "Bitmonster",
+    name = "Low Level Sendkeys",
+    version = "0.1",
+    author = "Teus (based on Bitmonster source)",
     description = (
-        "Plugin to interface with low-level-sendkeys through TCP/IP."
+        "Plugin to interface with low-level-sendkeys application through TCP/IP."
     ),
     canMultiLoad = True,
     icon = (
@@ -53,40 +54,48 @@ class Text:
     port = "Port:"
     tcpBox = "Low Level SendKeys TCP/IP Settings"
 #    securityBox = "Security"
-    class Map:
-        parameterDescription = "Event to send:"
-    
+    commandType = "Command Type:"
+    command = "Command:"
+    commandsMapSendKeys = "SENDKEYS"
+    commandsMapSendMacro = "SENDMACRO"
+    commandsMapLoadFile = "LOADFILE"
+    commandsMapSendToTray = "SENDTOTRAY"
+    commandsMapRestoreWindow = "RESTOREWINDOW"
     
 
-class NetworkSender(eg.PluginBase):
+class LowLevelSendKeysNetworkSender(eg.PluginBase):
     text = Text
-    
+
     def __init__(self):
-        self.AddAction(Map)
+        self.AddAction(Command)
         
         
-    def __start__(self, host, port, password):
+    def __start__(self, host, port):
         self.host = host
         self.port = port
-        self.password = password
         
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket = sock
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.settimeout(2.0)
-        try:
-            sock.connect((self.host, self.port))
-            sock.settimeout(1.0)
-        except:
-            if eg.debugLevel:
-                eg.PrintTraceback()
-            sock.close()
-            self.PrintError("Network connection failed")
-            return None
+        self.socket = None
+        #sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #self.socket = sock
+        #sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        #sock.settimeout(2.0)
+        #try:
+        #    sock.connect((self.host, self.port))
+        #    sock.settimeout(1.0)
+        #    
+        #    print "Connection with low-level-sendkeys established"
+        #except:
+        #    if eg.debugLevel:
+        #        eg.PrintTraceback()
+        #    self.PrintError("Network connection failed, reason: " + traceback.print_exc())
+        #    sock.close()
+        return None
         
     def __stop__(self):
         if self.socket:
-            self.socket.close()
+           self.socket.close()
+           print "Connection with low-level-sendkeys closed."
+
         self.socket = None
 
     def Configure(self, host="localhost", port=2005):
@@ -97,7 +106,8 @@ class NetworkSender(eg.PluginBase):
         
         st1 = panel.StaticText(text.host)
         st2 = panel.StaticText(text.port)
-        eg.EqualizeWidths((st1, st2, st3))
+        eg.EqualizeWidths((st1, st2))
+        #eg.EqualizeWidths((st1, st2, st3))
         tcpBox = panel.BoxedGroup(
             text.tcpBox,
             (st1, hostCtrl),
@@ -119,18 +129,30 @@ class NetworkSender(eg.PluginBase):
             )
 
 
-    def Send(self, eventString, payload=None):
+    def Send(self, type, message):
         sock = self.socket
+        
         try:
-            sock.sendall(eventString.encode(eg.systemEncoding) + "\n")
+            if sock == None:
+               print "Connection with low-level-sendkeys was lost, trying to reconnect."
+               sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+               self.socket = sock
+               sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+               sock.settimeout(2.0)               
+               sock.connect((self.host, self.port))
+               sock.settimeout(1.0)
+               print "Connection with low-level-sendkeys established"
+
+            sock.sendall(type.encode(eg.systemEncoding) + " " + message.encode(eg.systemEncoding) + "\n")
 
             return sock
         
         except:
             if eg.debugLevel:
                 eg.PrintTraceback()
+            self.PrintError("Network connection failed, reason: " + traceback.print_exc())
             sock.close()
-            self.PrintError("NetworkSender failed")
+            self.socket = None
             return None
 
 
@@ -139,13 +161,58 @@ class NetworkSender(eg.PluginBase):
         #sock.sendall("close\n")
         #sock.close()
         
+class Command(eg.ActionBase):
+    name = "Send Command"
+    mode = 0
+    
+    #def __init__ (self):
+    #    self.mode = 0
         
-        
-class Map(eg.ActionWithStringParameter):
+    def __call__(self, type, message):
+        if type=="": eg.PrintError("Message type must be set!")
 
-    def __call__(self, mesg):
-        res = self.plugin.Send(eg.ParseString(mesg))
+        res = self.plugin.Send(eg.ParseString(type), eg.ParseString(message))
         #if res:
         #    eg.event.AddUpFunc(self.plugin.MapUp, res)
         return res
+    
+    def Configure(self, type="SENDKEYS", message=""):
+        panel = eg.ConfigPanel()
+        text = Text
+        
+        #typeCtrl = panel.Choice(text.commandType, text.commandsMap)
+        typeCtrl = wx.Choice(panel,-1,size=(200,-1))
+        typeCtrl.AppendItems(strings=(text.commandsMapSendKeys,text.commandsMapSendMacro,text.commandsMapLoadFile,text.commandsMapSendToTray,text.commandsMapRestoreWindow))
+        typeCtrl.SetSelection(self.mode)
+
+        commandCtrl = panel.TextCtrl(message)
+        
+        st1 = panel.StaticText(text.commandType)
+        st2 = panel.StaticText(text.command)
+        eg.EqualizeWidths((st1, st2))
+
+        #box1 = panel.BoxedGroup(text.tcpBox, (st1, addrCtrl), (st2,portCtrl))
+        #box2 = panel.BoxedGroup(text.securityBox, (st3, passwordCtrl))
+        #box3 = panel.BoxedGroup(text.dataBox, (st4, dataNameCtrl), (st5, dataCtrl))
+        
+        panel.sizer.Add(typeCtrl, 0, wx.EXPAND)
+        panel.sizer.Add(commandCtrl, 0, wx.EXPAND)
+
+        #panel.sizer.AddMany([
+        #    (box1, 0, wx.EXPAND),
+        #    (box2, 0, wx.EXPAND|wx.TOP, 10),
+        #    (box3, 0, wx.EXPAND|wx.TOP, 10),
+        #])
+
+        while panel.Affirmed():
+            panel.SetResult(
+                typeCtrl.GetStringSelection(),
+                commandCtrl.GetValue()
+            )
+            self.mode = typeCtrl.GetSelection()
+        
+#
+#self.combo2 = wx.ComboBox(self, -1, value=areaList[0], pos=wx.Point(150, 30),
+#
+#size=wx.Size(120, 150), choices=areaList)
           
