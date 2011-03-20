@@ -26,8 +26,14 @@ namespace low_level_sendkeys.Comunnication.Sockets
             {
                 case CommandMap.Commands.None:
                     break;
+                case CommandMap.Commands.ListKeys:
+                    return CommunicationBridge.ListKeys();
                 case CommandMap.Commands.Sendkeys:
                     return CommunicationBridge.SendKeys(GetParams(parameters, ' ', 1)[0]);
+                case CommandMap.Commands.ListMacros:
+                    return CommunicationBridge.ListMacros();
+                case CommandMap.Commands.SendMacro:
+                    return CommunicationBridge.SendMacro(GetParams(parameters, ' ', 1)[0]);
                 case CommandMap.Commands.Loadfile:
                     break;
                 case CommandMap.Commands.RemapKey:
@@ -63,8 +69,6 @@ namespace low_level_sendkeys.Comunnication.Sockets
                     ShowHelp();
                     return CommunicationBridge.ResponseOk;
 
-                case CommandMap.Commands.ListKeys:
-                    return CommunicationBridge.ListKeys();
 
             }
 

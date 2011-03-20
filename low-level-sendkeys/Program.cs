@@ -27,7 +27,9 @@ using CommandLine;
 using low_level_sendkeys.Comunnication;
 using low_level_sendkeys.Comunnication.Sockets;
 using low_level_sendkeys.Comunnication.Win32Api;
+using low_level_sendkeys.Helpers;
 using low_level_sendkeys.Keys;
+using low_level_sendkeys.Macros;
 
 namespace low_level_sendkeys
 {
@@ -86,6 +88,7 @@ namespace low_level_sendkeys
             CommunicationBridge.SetMainWindow(mainForm);
 
             KeyManager.LoadKeyListFromDisk();
+            MacroManager.LoadMacroListFromDisk();
 
             KeyboardManager.RefreshFirstActiveKeyboard();
             SendRawKeys.StartService();
@@ -97,11 +100,13 @@ namespace low_level_sendkeys
             {
                 mainForm.MinimizeToTray();
             }
+            mainForm.ConfigureMainForm();
             Application.Run(mainForm);
 
             SocketConnection.StopSocketServer();
             Win32Connection.StopService();
             KeyManager.SaveKeyListToDisk();
+            MacroManager.SaveMacroListToDisk();
             SendRawKeys.StopService();
         }
 

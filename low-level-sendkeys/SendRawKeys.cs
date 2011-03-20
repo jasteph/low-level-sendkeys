@@ -7,6 +7,7 @@ using low_level_sendkeys.KernelHotkey;
 using System.Threading;
 using low_level_sendkeys.Keys;
 using low_level_sendkeys.Comunnication;
+using low_level_sendkeys.Macros;
 
 namespace low_level_sendkeys
 {
@@ -24,6 +25,21 @@ namespace low_level_sendkeys
         public static void StopService()
         {
             keyboardManager.StopListenKeyBoard();
+        }
+
+        public static string SendMacro(string macroName)
+        {
+            return SendMacro(macroName, true);   
+        }
+        public static string SendMacro(string macroName, bool waitFinish)
+        {
+            var macro =MacroManager.Macros.SingleOrDefault(m => m.Name.Equals(macroName, StringComparison.InvariantCultureIgnoreCase));
+            if (macro == null)
+            {
+                return CommunicationBridge.ResponseError + string.Format(" Macro '{0}' does not exist.", macroName);
+            }
+
+            return SendKeys(macro.MacroCommand, waitFinish);
         }
 
         public static string SendKeys(string commands)

@@ -6,15 +6,17 @@ using low_level_sendkeys.KernelHotkey;
 namespace low_level_sendkeys.Keys
 {
     [Serializable]
-    public class Key : ISerializable
+    public class Key : ISerializable, IComparable
     {
         public string Name { get; set; }
+        public string InfoWindowsKeys { get; set; }
         public readonly List<KeyStroke> KeyDownStrokes;
         public readonly List<KeyStroke> KeyUpStrokes;
 
         public Key(string keyName)
         {
             Name = keyName;
+            InfoWindowsKeys = string.Empty;
             KeyDownStrokes = new List<KeyStroke>();
             KeyUpStrokes = new List<KeyStroke>();
         }
@@ -24,7 +26,11 @@ namespace low_level_sendkeys.Keys
             KeyDownStrokes = new List<KeyStroke>();
             KeyUpStrokes = new List<KeyStroke>();
 
+            //int version = info.GetInt32("Version");
+
             Name = info.GetString("keyName");
+
+            InfoWindowsKeys = info.GetString("InfoWindowsKeys");
 
             int totalKeyDown = info.GetInt32("TotalKeyDown");
             for (int i = 0; i < totalKeyDown; i++)
@@ -52,7 +58,9 @@ namespace low_level_sendkeys.Keys
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            info.AddValue("Version", 1);
             info.AddValue("keyName", Name);
+            info.AddValue("InfoWindowsKeys", InfoWindowsKeys);
 
             info.AddValue("TotalKeyDown", KeyDownStrokes.Count);
             for (int i = 0; i < KeyDownStrokes.Count; i++)
@@ -69,6 +77,14 @@ namespace low_level_sendkeys.Keys
                 info.AddValue("ku_i_" + i, KeyUpStrokes[i].information, typeof(uint));
                 info.AddValue("ku_s_" + i, KeyUpStrokes[i].state, typeof(ushort));
             }
+        }
+
+        public int CompareTo(object obj)
+        {
+            var compareKey = obj as Key;
+            if (compareKey == null) throw new ArgumentException("Object is not of 'Key' type");
+
+            return Name.CompareTo(compareKey.Name);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace low_level_sendkeys.KernelHotkey
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("Code: " + code);
+            sb.AppendFormat("Code: {0} (0x{1})", code, code.ToString("X").PadLeft(2,'0'));
             sb.Append(", Infomation: " + information);
             sb.Append(", State: ");
 

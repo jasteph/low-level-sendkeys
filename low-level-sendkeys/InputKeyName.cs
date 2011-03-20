@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace low_level_sendkeys
@@ -18,15 +12,35 @@ namespace low_level_sendkeys
 
         private void OkCommand_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            ConfirmDialog();
+        }
+
+        private void ConfirmDialog()
+        {
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void CancelCommand_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void KeyName_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
+            {
+                SendKeys.Send("{TAB}");
+            }
+        }
+
+        private void WindowsKeysDescription_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
+            {
+                ConfirmDialog();
+            }
         }
     }
-
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using low_level_sendkeys.Keys;
+using low_level_sendkeys.Macros;
 using low_level_sendkeys.Properties;
 using low_level_sendkeys.KernelHotkey;
 using low_level_sendkeys.Comunnication;
@@ -15,9 +16,17 @@ namespace low_level_sendkeys
         {
             InitializeComponent();
 
-            KeyManager.Keys.ForEach(AddKeyNode);
+            ConfigureMainForm();
+        }
 
-            EnableButtons();
+        public void ConfigureMainForm()
+        {
+            KeyManager.Keys.ForEach(AddKeyNode);
+            RefreshMacrosList();
+
+            EnableKeyButtons();
+            EnableMacroButtons();
+            FillConnectedKeyaboards();
         }
 
         private void RemoveKeyCommand_Click(object sender, EventArgs e)
@@ -29,7 +38,7 @@ namespace low_level_sendkeys
         {
             if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 0)
             {
-                EnableButtons();
+                EnableKeyButtons();
                 return;
             }
 
@@ -56,6 +65,7 @@ namespace low_level_sendkeys
                 {
                     var configureKeyDialog = new MapKey();
                     var newKey = configureKeyDialog.ShowDialog(this, inputKeyName.KeyName.Text, true);
+                    newKey.InfoWindowsKeys = inputKeyName.WindowsKeysDescription.Text;
                     if (newKey != null)
                     {
                         KeyManager.Keys.Add(newKey);
@@ -88,14 +98,17 @@ namespace low_level_sendkeys
         private void AddKeyNode(Key key)
         {
             TreeNode treeNode = BuildNodeFromKey(key);
+
+            //treeNode.Expand();
             treeKeys.Nodes.Add(treeNode);
         }
 
-        private TreeNode BuildNodeFromKey(Key key)
+        private static TreeNode BuildNodeFromKey(Key key)
         {
             var treeNode = new TreeNode(key.Name)
                                     {
-                                        Name = key.Name
+                                        Name = key.Name,
+                                        Text = string.Format("{0}{1}", key.Name, string.IsNullOrEmpty(key.InfoWindowsKeys) ? string.Empty : string.Format("      Description: {0}", key.InfoWindowsKeys))
                                     };
 
             var treeDown = new TreeNode("Pressed")
@@ -161,12 +174,28 @@ namespace low_level_sendkeys
             }
         }
 
-        private void treeKeys_AfterSelect(object sender, TreeViewEventArgs e)
+        private void TreeKeysAfterSelect(object sender, TreeViewEventArgs e)
         {
-            EnableButtons();
+            EnableKeyButtons();
         }
 
-        private void EnableButtons()
+        private void EnableMacroButtons()
+        {
+            if (ListMacros.SelectedItem == null)
+            {
+                RemoveMacroCommand.Enabled = false;
+                ChangeMacroCommand.Enabled = false;
+                ExecuteSelectedMacroCommand.Enabled = false;
+            }
+            else
+            {
+                RemoveMacroCommand.Enabled = true;
+                ChangeMacroCommand.Enabled = true;
+                ExecuteSelectedMacroCommand.Enabled = true;
+            }
+        }
+
+        private void EnableKeyButtons()
         {
             if (treeKeys.SelectedNode == null)
             {
@@ -219,31 +248,35 @@ namespace low_level_sendkeys
         {
             if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 0)
             {
-                EnableButtons();
+                EnableKeyButtons();
                 return;
             }
 
-            string oldKeyName = treeKeys.SelectedNode.Name;
+            var currentKey = KeyManager.Keys.Single(k => k.Name.Equals(treeKeys.SelectedNode.Name));
 
-            var inputKeyName = new InputKeyName();
-
-            inputKeyName.KeyName.Text = oldKeyName;
+            var inputKeyName = new InputKeyName
+                                   {
+                                       KeyName = {Text = currentKey.Name},
+                                       WindowsKeysDescription = {Text = currentKey.InfoWindowsKeys}
+                                   };
 
             inputKeyName.ShowDialog(this);
             string newKeyName = inputKeyName.KeyName.Text;
+            string newWindowsKeysDescription = inputKeyName.WindowsKeysDescription.Text;
 
-            if (inputKeyName.DialogResult == DialogResult.OK && !string.IsNullOrEmpty(newKeyName) && newKeyName != oldKeyName)
+            if (inputKeyName.DialogResult == DialogResult.OK && !string.IsNullOrEmpty(newKeyName) && (newKeyName != currentKey.Name || newWindowsKeysDescription != currentKey.InfoWindowsKeys ))
             {
-                if (KeyManager.Keys.Exists(k => k.Name.Equals(newKeyName, StringComparison.InvariantCultureIgnoreCase)))
+                if (KeyManager.Keys.Exists(k => !k.Equals(currentKey) && k.Name.Equals(newKeyName, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     MessageBox.Show(string.Format("A key with a name '{0}' already exists.", newKeyName));
                 }
                 else
                 {
-                    var key = KeyManager.Keys.Single(k => k.Name.Equals(oldKeyName, StringComparison.InvariantCultureIgnoreCase));
-                    key.Name = newKeyName;
+                    var oldKeyName = currentKey.Name;
+                    currentKey.Name = newKeyName;
+                    currentKey.InfoWindowsKeys = newWindowsKeysDescription;
 
-                    UpdateKeyNode(key, oldKeyName);
+                    UpdateKeyNode(currentKey, oldKeyName);
                 }
 
             }
@@ -253,7 +286,7 @@ namespace low_level_sendkeys
         {
             if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 0)
             {
-                EnableButtons();
+                EnableKeyButtons();
                 return;
             }
 
@@ -263,6 +296,7 @@ namespace low_level_sendkeys
             {
                 int index = KeyManager.Keys.IndexOf(KeyManager.Keys.Single(k => k.Name.Equals(treeKeys.SelectedNode.Name)));
 
+                newKey.InfoWindowsKeys = KeyManager.Keys[index].InfoWindowsKeys;
                 KeyManager.Keys.RemoveAt(index);
                 KeyManager.Keys.Insert(index, newKey);
                 UpdateKeyNode(newKey, newKey.Name);
@@ -279,7 +313,7 @@ namespace low_level_sendkeys
         {
             if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 2)
             {
-                EnableButtons();
+                EnableKeyButtons();
                 return;
             }
 
@@ -318,7 +352,7 @@ namespace low_level_sendkeys
         {
             if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 1)
             {
-                EnableButtons();
+                EnableKeyButtons();
                 return;
             }
 
@@ -356,7 +390,7 @@ namespace low_level_sendkeys
         {
             if (treeKeys.SelectedNode == null || treeKeys.SelectedNode.Level != 2)
             {
-                EnableButtons();
+                EnableKeyButtons();
                 return;
             }
 
@@ -377,7 +411,7 @@ namespace low_level_sendkeys
             UpdateKeyNode(currentKey, currentKey.Name);
         }
 
-        private void treeKeys_DoubleClick(object sender, EventArgs e)
+        private void TreeKeysDoubleClick(object sender, EventArgs e)
         {
             if (treeKeys.SelectedNode != null && treeKeys.SelectedNode.Level == 2)
             {
@@ -385,7 +419,7 @@ namespace low_level_sendkeys
             }
         }
 
-        private void treeKeys_KeyUp(object sender, KeyEventArgs e)
+        private void TreeKeysKeyUp(object sender, KeyEventArgs e)
         {
             if (treeKeys.SelectedNode == null) return;
 
@@ -427,7 +461,7 @@ namespace low_level_sendkeys
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1Click(object sender, EventArgs e)
         {
             SendRawKeys.SendKeys(SendCommands.Text, false);
         }
@@ -483,6 +517,146 @@ namespace low_level_sendkeys
         {
             if (TrayIcon.Visible) value = false;
             base.SetVisibleCore(value);
+        }
+
+        private void AddMacroCommand_Click(object sender, EventArgs e)
+        {
+            var configureMacro = new ConfigureMacro();
+            configureMacro.ShowDialog(this);
+            if (configureMacro.DialogResult == DialogResult.OK)
+            {
+                if (MacroManager.Macros.Exists(m => m.Name.Equals(configureMacro.MacroName.Text, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    MessageBox.Show(string.Format("Macro with name {0} already exists", configureMacro.MacroName.Text));
+                }
+                else
+                {
+                    var newMacro = new Macro(configureMacro.MacroName.Text)
+                    {
+                        MacroCommand = configureMacro.MacroCommand.Text
+                    };
+                    MacroManager.Macros.Add(newMacro);
+                    RefreshMacrosList();
+                }
+            }
+        }
+
+        private void RemoveMacroCommand_Click(object sender, EventArgs e)
+        {
+            if (ListMacros.SelectedItem == null)
+            {
+                EnableMacroButtons();
+                return;
+            }
+            MacroManager.Macros.Remove((Macro)ListMacros.SelectedItem);
+        }
+
+        private void ListMacros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            EnableMacroButtons();
+        }
+
+        private void ChangeMacroCommand_Click(object sender, EventArgs e)
+        {
+            ChangeMacro();
+        }
+
+        private void ChangeMacro()
+        {
+            if (ListMacros.SelectedItem == null)
+            {
+                EnableMacroButtons();
+                return;
+            }
+
+            var changeMacro = (Macro)ListMacros.SelectedItem;
+
+            var configureMacro = new ConfigureMacro
+                                     {
+                                         MacroName = { Text = changeMacro.Name },
+                                         MacroCommand = { Text = changeMacro.MacroCommand }
+                                     };
+
+
+            configureMacro.ShowDialog(this);
+            if (configureMacro.DialogResult == DialogResult.OK)
+            {
+                if (MacroManager.Macros.Exists(m => !m.Equals(changeMacro) && m.Name.Equals(configureMacro.MacroName.Text, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    MessageBox.Show(string.Format("Macro with name {0} already exists", configureMacro.MacroName.Text));
+                }
+                else
+                {
+                    changeMacro.Name = configureMacro.MacroName.Text;
+                    changeMacro.MacroCommand = configureMacro.MacroCommand.Text;
+                }
+            }
+
+            RefreshMacrosList();
+        }
+
+        private void RefreshMacrosList()
+        {
+            var selectedMacro = (Macro) ListMacros.SelectedItem;
+            ListMacros.Items.Clear();
+            MacroManager.Macros.ForEach(m => ListMacros.Items.Add(m));
+            ListMacros.SelectedItem = selectedMacro;
+        }
+
+        private void ExportMacrosCommand_Click(object sender, EventArgs e)
+        {
+            var x = new SaveFileDialog();
+            x.Title = @"Export Macros";
+            x.Filter = @"KeyMacros files (*.macros)|*.macros";
+            DialogResult result = x.ShowDialog(this);
+
+            if (result == DialogResult.OK)
+            {
+                MacroManager.SaveMacroListToDisk(x.FileName);
+                MessageBox.Show(this, Texts.MacrosExported);
+            }
+        }
+
+        private void ImportMacrosCommand_Click(object sender, EventArgs e)
+        {
+            var x = new OpenFileDialog();
+            x.Title = @"Import Macros";
+            x.Filter = @"KeyMacros files (*.macros)|*.macros";
+            DialogResult result = x.ShowDialog(this);
+
+            if (result == DialogResult.OK)
+            {
+                MacroManager.LoadMacroListFromDisk(x.FileName);
+
+                RefreshMacrosList();
+
+                MessageBox.Show(this, Texts.MacrosImported);
+            }
+        }
+
+
+        private void ListMacros_DoubleClick(object sender, EventArgs e)
+        {
+            ChangeMacro();
+        }
+
+        private void SortKeys_Click(object sender, EventArgs e)
+        {
+            KeyManager.Keys.Sort();
+
+            treeKeys.Nodes.Clear();
+            KeyManager.Keys.ForEach(AddKeyNode);
+        }
+
+        private void ExecuteSelectedMacroCommand_Click(object sender, EventArgs e)
+        {
+            if (ListMacros.SelectedItem == null)
+            {
+                EnableMacroButtons();
+                return;
+            }
+
+            SendRawKeys.SendMacro(((Macro) ListMacros.SelectedItem).Name);
         }
     }
 }

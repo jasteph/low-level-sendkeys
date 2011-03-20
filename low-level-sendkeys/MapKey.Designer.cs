@@ -36,7 +36,6 @@
             this.keyUpCommands = new System.Windows.Forms.TextBox();
             this.AcceptCommand = new System.Windows.Forms.Button();
             this.CancelCommand = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -62,7 +61,7 @@
             this.RepeatCommand.Name = "RepeatCommand";
             this.RepeatCommand.Size = new System.Drawing.Size(117, 29);
             this.RepeatCommand.TabIndex = 1;
-            this.RepeatCommand.Text = "Repeat";
+            this.RepeatCommand.Text = "&Repeat";
             this.RepeatCommand.UseVisualStyleBackColor = true;
             this.RepeatCommand.Click += new System.EventHandler(this.RepeatCommand_Click);
             // 
@@ -126,21 +125,11 @@
             this.CancelCommand.UseVisualStyleBackColor = true;
             this.CancelCommand.Click += new System.EventHandler(this.CancelCommand_Click);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 301);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "label1";
-            // 
             // MapKey
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 323);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(403, 290);
             this.Controls.Add(this.CancelCommand);
             this.Controls.Add(this.AcceptCommand);
             this.Controls.Add(this.groupBox2);
@@ -173,6 +162,5 @@
         private System.Windows.Forms.TextBox keyUpCommands;
         private System.Windows.Forms.Button AcceptCommand;
         private System.Windows.Forms.Button CancelCommand;
-        private System.Windows.Forms.Label label1;
     }
 }

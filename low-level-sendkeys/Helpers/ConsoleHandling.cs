@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace low_level_sendkeys
+namespace low_level_sendkeys.Helpers
 {
     internal class ConsoleHandling
     {

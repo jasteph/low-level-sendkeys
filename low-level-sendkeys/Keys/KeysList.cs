@@ -10,7 +10,7 @@ namespace low_level_sendkeys.Keys
         public KeysList() { }
         public KeysList(IEnumerable<Key> initialList)
         {
-            this.AddRange(initialList);
+            AddRange(initialList);
         }
         public KeysList(SerializationInfo info, StreamingContext context)
         {
@@ -35,8 +35,8 @@ namespace low_level_sendkeys.Keys
             info.AddValue("Version", 1);
             info.AddValue("ConfigurationName", ConfiugurationName);
 
-            info.AddValue("TotalItens", this.Count);
-            for (int i = 0; i < this.Count; i++)
+            info.AddValue("TotalItens", Count);
+            for (int i = 0; i < Count; i++)
             {
                 info.AddValue("key" + i, this[i], typeof(Key));
             }

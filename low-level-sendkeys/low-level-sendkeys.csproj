@@ -64,7 +64,8 @@
     </Compile>
     <Compile Include="Comunnication\Win32Api\Win32Connection.cs" />
     <Compile Include="Comunnication\Win32Api\Win32SupportCode.cs" />
-    <Compile Include="ConsoleHandling.cs" />
+    <Compile Include="Helpers\EnumerableComparer.cs" />
+    <Compile Include="Helpers\ConsoleHandling.cs" />
     <Compile Include="InputKeyName.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +78,15 @@
     <Compile Include="Keys\KeyManager.cs" />
     <Compile Include="Keys\KeysList.cs" />
     <Compile Include="KeystrokeReceivedEventArgs.cs" />
+    <Compile Include="Macros\ConfigureMacro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Macros\ConfigureMacro.Designer.cs">
+      <DependentUpon>ConfigureMacro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Macros\MacroManager.cs" />
+    <Compile Include="Macros\Macro.cs" />
+    <Compile Include="Macros\MacroList.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="InputKeyName.resx">
       <DependentUpon>InputKeyName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Macros\ConfigureMacro.resx">
+      <DependentUpon>ConfigureMacro.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

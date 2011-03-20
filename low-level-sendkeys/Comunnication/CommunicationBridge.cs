@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Windows.Forms;
 
@@ -79,6 +80,20 @@ namespace low_level_sendkeys.Comunnication
             }
             _mainWindow.RestoreWindow();
             return ResponseOk;
+        }
+
+        public static string SendMacro(string macroName)
+        {
+            return SendRawKeys.SendMacro(macroName);
+        }
+
+        public static string ListMacros()
+        {
+            var sb = new StringBuilder();
+            Macros.MacroManager.Macros.ForEach(k => sb.AppendLine(k.Name));
+
+            sb.AppendLine(ResponseOk);
+            return sb.ToString();
         }
     }
 

@@ -86,5 +86,23 @@ namespace low_level_sendkeys.Properties {
                 return ResourceManager.GetString("KeysImported", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Macros Exported Sucefully.
+        /// </summary>
+        internal static string MacrosExported {
+            get {
+                return ResourceManager.GetString("MacrosExported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Macros imported sucefully.
+        /// </summary>
+        internal static string MacrosImported {
+            get {
+                return ResourceManager.GetString("MacrosImported", resourceCulture);
+            }
+        }
     }
 }

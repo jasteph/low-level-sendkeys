@@ -11,6 +11,8 @@ namespace low_level_sendkeys.Comunnication
             None,
             ListKeys,
             Sendkeys,
+            ListMacros,
+            SendMacro,
             Loadfile,
             RemapKey,
             UnloadApplication,
@@ -40,6 +42,8 @@ namespace low_level_sendkeys.Comunnication
             CommandsMap = Hashtable.Synchronized(new Hashtable());
             CommandsMap["LISTKEYS"] = Commands.ListKeys;
             CommandsMap["SENDKEYS"] = Commands.Sendkeys;
+            CommandsMap["LISTMACROS"] = Commands.ListMacros;
+            CommandsMap["SENDMACRO"] = Commands.SendMacro;
             CommandsMap["LOADFILE"] = Commands.Loadfile;
             CommandsMap["REMAPKEY"] = Commands.RemapKey;
             CommandsMap["UNLOADAPPLICATION"] = Commands.UnloadApplication;
