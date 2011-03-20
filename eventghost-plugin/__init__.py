@@ -168,7 +168,7 @@ class Command(eg.ActionBase):
     #def __init__ (self):
     #    self.mode = 0
         
-    def __call__(self, type, message):
+    def __call__(self, displayValue, type, message):
         if type=="": eg.PrintError("Message type must be set!")
 
         res = self.plugin.Send(eg.ParseString(type), eg.ParseString(message))
@@ -176,7 +176,7 @@ class Command(eg.ActionBase):
         #    eg.event.AddUpFunc(self.plugin.MapUp, res)
         return res
     
-    def Configure(self, type="SENDKEYS", message=""):
+    def Configure(self, displayValue, type="SENDKEYS", message=""):
         panel = eg.ConfigPanel()
         text = Text
         
@@ -206,6 +206,7 @@ class Command(eg.ActionBase):
 
         while panel.Affirmed():
             panel.SetResult(
+                typeCtrl.GetStringSelection() + ": " + commandCtrl.GetValue(),
                 typeCtrl.GetStringSelection(),
                 commandCtrl.GetValue()
             )
