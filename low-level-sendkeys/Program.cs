@@ -30,6 +30,7 @@ using low_level_sendkeys.Comunnication.Win32Api;
 using low_level_sendkeys.Helpers;
 using low_level_sendkeys.Keys;
 using low_level_sendkeys.Macros;
+using low_level_sendkeys.Comunnication.EventGhost;
 
 namespace low_level_sendkeys
 {
@@ -95,7 +96,7 @@ namespace low_level_sendkeys
 
             Win32Connection.StartService();
             if (options.StartSocketServer) SocketConnection.StartSocketServer();
-
+            if (options.StartEventGhostServer) EventGhostConnection.StartEventGhostServer();
             if (options.Minimized)
             {
                 mainForm.MinimizeToTray();
@@ -103,6 +104,7 @@ namespace low_level_sendkeys
             mainForm.ConfigureMainForm();
             Application.Run(mainForm);
 
+            EventGhostConnection.StopEventGhostServer();
             SocketConnection.StopSocketServer();
             Win32Connection.StopService();
             KeyManager.SaveKeyListToDisk();
@@ -153,6 +155,12 @@ namespace low_level_sendkeys
                 {
                     var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "STOPSOCKETSERVER");
                     Console.WriteLine(result == CommunicationBridge.ResponseOk ? "Socket server stopped." : result);
+                }
+
+                if (options.StartEventGhostServer)
+                {
+                    var result = messageContainer.SendMessageAndWaitResponse(mainContainrName, "STARTEVENTGHOSTSERVER");
+                    Console.WriteLine(result == CommunicationBridge.ResponseOk ? "EventGhost server started." : result);
                 }
 
                 if (options.Quit)

@@ -29,6 +29,9 @@ namespace low_level_sendkeys.Comunnication
         [Option("v", "StartSocketServer", HelpText = "Start socket server")]
         public bool StartSocketServer = false;
 
+        [Option("e", "StartEventGhostServer", HelpText = "Start eventghost server")]
+        public bool StartEventGhostServer = false;
+
         [Option("b", "StopSocketServer", HelpText = "Stop socket server")]
         public bool StopSocketServer = false;
 
