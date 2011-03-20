@@ -131,8 +131,6 @@ namespace low_level_sendkeys.Comunnication.EventGhost
                     RespondToEventGhost("HELP", "Command invalid on eventghost. See application for help.");
                     break;
             }
-
-            RespondToEventGhost("INVALID", CommunicationBridge.ResponseError + " Invalid Command.");
         }
 
         private static string[] GetParams(string parameterString, char delimiter, int requiredParams)
