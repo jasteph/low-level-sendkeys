@@ -35,11 +35,11 @@ namespace low_level_sendkeys
 
         public static string SendMacro(string macroName)
         {
-            return SendMacro(macroName, true);   
+            return SendMacro(macroName, true);
         }
         public static string SendMacro(string macroName, bool waitFinish)
         {
-            var macro =MacroManager.Macros.SingleOrDefault(m => m.Name.Equals(macroName, StringComparison.InvariantCultureIgnoreCase));
+            var macro = MacroManager.Macros.SingleOrDefault(m => m.Name.Equals(macroName, StringComparison.InvariantCultureIgnoreCase));
             if (macro == null)
             {
                 return CommunicationBridge.ResponseError + string.Format(" Macro '{0}' does not exist.", macroName);
@@ -77,6 +77,10 @@ namespace low_level_sendkeys
                     kbdIndex = KeyboardManager.FirstActiveKeyboard;
                 }
             }
+            else
+            {
+                kbdIndex = KeyboardManager.FirstActiveKeyboard;
+            }
 
             for (int i = startIndex; i < stringCommands.Length; i++)
             {
@@ -93,7 +97,7 @@ namespace low_level_sendkeys
                     bool sendDown = true;
                     bool sendUp = true;
 
-                    if (textValue.Length > 1 &&  textValue.StartsWith("+"))
+                    if (textValue.Length > 1 && textValue.StartsWith("+"))
                     {
                         keyName = textValue.Substring(1);
                         sendUp = false;

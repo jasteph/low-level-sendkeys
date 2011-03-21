@@ -75,7 +75,14 @@ namespace low_level_sendkeys.Comunnication.Win32Api
 
                             if (requestResponse)
                             {
-                                SendMessage(sourceMessageManager, messageReceivedEventArgs.Response);
+                                if (m.WParam == IntPtr.Zero)
+                                {
+                                    SendMessage(sourceMessageManager, messageReceivedEventArgs.Response);
+                                }
+                                else
+                                {
+                                    SendMessage(m.WParam, messageReceivedEventArgs.Response);
+                                }
                             }
                         }
                     }
@@ -94,9 +101,15 @@ namespace low_level_sendkeys.Comunnication.Win32Api
             int hwnd = Win32SupportCode.FindWindow(null, destinyMessageManager);
             if (hwnd != 0)
             {
-                return SendSingleLine((IntPtr)hwnd, _managerName + "#0" + message);
+                return SendMessage((IntPtr)hwnd, message);
             }
             return false;
+        }
+
+        public bool SendMessage(IntPtr destinyHandle, string message)
+        {
+            if (destinyHandle == IntPtr.Zero) return false;
+            return SendSingleLine(destinyHandle, _managerName + "#0" + message);
         }
 
 
@@ -146,7 +159,7 @@ namespace low_level_sendkeys.Comunnication.Win32Api
                 cds.lpData = Win32SupportCode.LocalAlloc(0x40, cds.cbData);
                 Marshal.Copy(args.ToCharArray(), 0, cds.lpData, args.Length);
                 cds.dwData = (IntPtr)1;
-                Win32SupportCode.SendMessage(targetHWnd, Win32SupportCode.WM_COPYDATA, IntPtr.Zero, ref cds);
+                Win32SupportCode.SendMessage(targetHWnd, Win32SupportCode.WM_COPYDATA, this.Handle, ref cds);
             }
             finally
             {
