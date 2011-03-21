@@ -176,7 +176,7 @@ class Command(eg.ActionBase):
         #    eg.event.AddUpFunc(self.plugin.MapUp, res)
         return res
     
-    def Configure(self, displayValue, type="SENDKEYS", message=""):
+    def Configure(self, displayValue="", type="SENDKEYS", message=""):
         panel = eg.ConfigPanel()
         text = Text
         
