@@ -256,15 +256,15 @@ namespace low_level_sendkeys
 
             var inputKeyName = new InputKeyName
                                    {
-                                       KeyName = {Text = currentKey.Name},
-                                       WindowsKeysDescription = {Text = currentKey.InfoWindowsKeys}
+                                       KeyName = { Text = currentKey.Name },
+                                       WindowsKeysDescription = { Text = currentKey.InfoWindowsKeys }
                                    };
 
             inputKeyName.ShowDialog(this);
             string newKeyName = inputKeyName.KeyName.Text;
             string newWindowsKeysDescription = inputKeyName.WindowsKeysDescription.Text;
 
-            if (inputKeyName.DialogResult == DialogResult.OK && !string.IsNullOrEmpty(newKeyName) && (newKeyName != currentKey.Name || newWindowsKeysDescription != currentKey.InfoWindowsKeys ))
+            if (inputKeyName.DialogResult == DialogResult.OK && !string.IsNullOrEmpty(newKeyName) && (newKeyName != currentKey.Name || newWindowsKeysDescription != currentKey.InfoWindowsKeys))
             {
                 if (KeyManager.Keys.Exists(k => !k.Equals(currentKey) && k.Name.Equals(newKeyName, StringComparison.InvariantCultureIgnoreCase)))
                 {
@@ -597,7 +597,7 @@ namespace low_level_sendkeys
 
         private void RefreshMacrosList()
         {
-            var selectedMacro = (Macro) ListMacros.SelectedItem;
+            var selectedMacro = (Macro)ListMacros.SelectedItem;
             ListMacros.Items.Clear();
             MacroManager.Macros.ForEach(m => ListMacros.Items.Add(m));
             ListMacros.SelectedItem = selectedMacro;
@@ -656,7 +656,12 @@ namespace low_level_sendkeys
                 return;
             }
 
-            SendRawKeys.SendMacro(((Macro) ListMacros.SelectedItem).Name);
+            SendRawKeys.SendMacro(((Macro)ListMacros.SelectedItem).Name);
+        }
+
+        private void TestSendKeysCommand_Click(object sender, EventArgs e)
+        {
+            SendRawKeys.SendKeys(SendCommands.Text, false);
         }
     }
 }

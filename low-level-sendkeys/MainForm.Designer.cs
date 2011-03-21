@@ -44,7 +44,12 @@
             this.RemoveMakeCommand = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.TestSendKeysCommand = new System.Windows.Forms.Button();
+            this.SendCommands = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.SortKeys = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.ExecuteSelectedMacroCommand = new System.Windows.Forms.Button();
             this.ExportMacrosCommand = new System.Windows.Forms.Button();
             this.ImportMacrosCommand = new System.Windows.Forms.Button();
             this.AddMacroCommand = new System.Windows.Forms.Button();
@@ -67,11 +72,6 @@
             this.TrayIconContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CloseApplicationContextMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.MinimizeToTrayCommand = new System.Windows.Forms.Button();
-            this.SortKeys = new System.Windows.Forms.Button();
-            this.TestSendKeysCommand = new System.Windows.Forms.Button();
-            this.SendCommands = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.ExecuteSelectedMacroCommand = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -247,6 +247,47 @@
             this.tabPage1.Text = "Key Configuration";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // TestSendKeysCommand
+            // 
+            this.TestSendKeysCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.TestSendKeysCommand.Location = new System.Drawing.Point(455, 496);
+            this.TestSendKeysCommand.Name = "TestSendKeysCommand";
+            this.TestSendKeysCommand.Size = new System.Drawing.Size(73, 22);
+            this.TestSendKeysCommand.TabIndex = 15;
+            this.TestSendKeysCommand.Text = "SendKeys";
+            this.TestSendKeysCommand.UseVisualStyleBackColor = true;
+            this.TestSendKeysCommand.Click += new System.EventHandler(this.TestSendKeysCommand_Click);
+            // 
+            // SendCommands
+            // 
+            this.SendCommands.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.SendCommands.Location = new System.Drawing.Point(43, 498);
+            this.SendCommands.Name = "SendCommands";
+            this.SendCommands.Size = new System.Drawing.Size(406, 20);
+            this.SendCommands.TabIndex = 14;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 501);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(31, 13);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Test:";
+            // 
+            // SortKeys
+            // 
+            this.SortKeys.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SortKeys.Location = new System.Drawing.Point(479, 16);
+            this.SortKeys.Name = "SortKeys";
+            this.SortKeys.Size = new System.Drawing.Size(26, 25);
+            this.SortKeys.TabIndex = 8;
+            this.SortKeys.TabStop = false;
+            this.SortKeys.Text = "A-Z";
+            this.SortKeys.UseVisualStyleBackColor = true;
+            this.SortKeys.Click += new System.EventHandler(this.SortKeys_Click);
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.ExecuteSelectedMacroCommand);
@@ -263,6 +304,17 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Macro Configuration";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // ExecuteSelectedMacroCommand
+            // 
+            this.ExecuteSelectedMacroCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ExecuteSelectedMacroCommand.Location = new System.Drawing.Point(251, 477);
+            this.ExecuteSelectedMacroCommand.Name = "ExecuteSelectedMacroCommand";
+            this.ExecuteSelectedMacroCommand.Size = new System.Drawing.Size(132, 29);
+            this.ExecuteSelectedMacroCommand.TabIndex = 11;
+            this.ExecuteSelectedMacroCommand.Text = "EXECUTE SELECTED";
+            this.ExecuteSelectedMacroCommand.UseVisualStyleBackColor = true;
+            this.ExecuteSelectedMacroCommand.Click += new System.EventHandler(this.ExecuteSelectedMacroCommand_Click);
             // 
             // ExportMacrosCommand
             // 
@@ -348,7 +400,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(534, 498);
+            this.tabPage2.Size = new System.Drawing.Size(534, 524);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Keyboard Information";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -495,57 +547,6 @@
             this.MinimizeToTrayCommand.Text = "Minimize to Tray";
             this.MinimizeToTrayCommand.UseVisualStyleBackColor = true;
             this.MinimizeToTrayCommand.Click += new System.EventHandler(this.MinimizeToTrayCommand_Click);
-            // 
-            // SortKeys
-            // 
-            this.SortKeys.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SortKeys.Location = new System.Drawing.Point(479, 16);
-            this.SortKeys.Name = "SortKeys";
-            this.SortKeys.Size = new System.Drawing.Size(26, 25);
-            this.SortKeys.TabIndex = 8;
-            this.SortKeys.TabStop = false;
-            this.SortKeys.Text = "A-Z";
-            this.SortKeys.UseVisualStyleBackColor = true;
-            this.SortKeys.Click += new System.EventHandler(this.SortKeys_Click);
-            // 
-            // TestSendKeysCommand
-            // 
-            this.TestSendKeysCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TestSendKeysCommand.Location = new System.Drawing.Point(455, 496);
-            this.TestSendKeysCommand.Name = "TestSendKeysCommand";
-            this.TestSendKeysCommand.Size = new System.Drawing.Size(73, 22);
-            this.TestSendKeysCommand.TabIndex = 15;
-            this.TestSendKeysCommand.Text = "SendKeys";
-            this.TestSendKeysCommand.UseVisualStyleBackColor = true;
-            // 
-            // SendCommands
-            // 
-            this.SendCommands.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.SendCommands.Location = new System.Drawing.Point(43, 498);
-            this.SendCommands.Name = "SendCommands";
-            this.SendCommands.Size = new System.Drawing.Size(406, 20);
-            this.SendCommands.TabIndex = 14;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 501);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "Test:";
-            // 
-            // ExecuteSelectedMacroCommand
-            // 
-            this.ExecuteSelectedMacroCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ExecuteSelectedMacroCommand.Location = new System.Drawing.Point(251, 477);
-            this.ExecuteSelectedMacroCommand.Name = "ExecuteSelectedMacroCommand";
-            this.ExecuteSelectedMacroCommand.Size = new System.Drawing.Size(132, 29);
-            this.ExecuteSelectedMacroCommand.TabIndex = 11;
-            this.ExecuteSelectedMacroCommand.Text = "EXECUTE SELECTED";
-            this.ExecuteSelectedMacroCommand.UseVisualStyleBackColor = true;
-            this.ExecuteSelectedMacroCommand.Click += new System.EventHandler(this.ExecuteSelectedMacroCommand_Click);
             // 
             // MainForm
             // 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -17,9 +18,14 @@ namespace low_level_sendkeys
 
         private static readonly object LockSendKeys = new object();
         private static bool _executingCommands = false;
-
+        private static int _interval = 5;
         public static void StartService()
         {
+            string result = ConfigurationManager.AppSettings["MakeCodesInterval"];
+            if (string.IsNullOrEmpty(result) || !int.TryParse(result, out _interval))
+            {
+                _interval = 5;
+            }
             keyboardManager.ListenKeyBoard();
         }
         public static void StopService()
@@ -131,7 +137,7 @@ namespace low_level_sendkeys
                       foreach (IExecuteCommand executeCommand in executeCommands)
                       {
                           executeCommand.Execute();
-                          Thread.Sleep(5);
+                          Thread.Sleep(_interval);
                       }
                       _executingCommands = false;
                   });
