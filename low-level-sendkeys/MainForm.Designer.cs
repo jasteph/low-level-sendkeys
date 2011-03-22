@@ -556,7 +556,7 @@
             this.Controls.Add(this.MinimizeToTrayCommand);
             this.Controls.Add(this.tabControl1);
             this.MaximumSize = new System.Drawing.Size(573, 1280);
-            this.MinimumSize = new System.Drawing.Size(573, 462);
+            this.MinimumSize = new System.Drawing.Size(573, 400);
             this.Name = "MainForm";
             this.Text = "Low Level SendKeys And Keyboard Hook";
             this.groupBox1.ResumeLayout(false);

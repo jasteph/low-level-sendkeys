@@ -51,6 +51,12 @@ namespace low_level_sendkeys.Comunnication.Win32Api
                         e.Response = CommunicationBridge.SendKeys(string.Join(" ", tokens.Skip(1).ToArray()));
                     }
                     break;
+                case CommandMap.Commands.SendMacro:
+                    if (hasParans)
+                    {
+                        e.Response = CommunicationBridge.SendMacro(string.Join(" ", tokens.Skip(1).ToArray()));
+                    }
+                    break;
                 case CommandMap.Commands.ListKeys:
                     e.Response = CommunicationBridge.ListKeys();
                     return;

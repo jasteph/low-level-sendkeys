@@ -35,15 +35,6 @@ from eg.WinApi.Dynamic import (
     
 import win32con, win32api, win32gui, ctypes, ctypes.wintypes
 
-#class COPYDATASTRUCT(ctypes.Structure):
-#    _fields_ = [
-#        ('dwData', ctypes.wintypes.LPARAM),
-#        ('cbData', ctypes.wintypes.DWORD),
-#        ('lpData', ctypes.c_void_p)
-#    ]
-#PCOPYDATASTRUCT = ctypes.POINTER(COPYDATASTRUCT)
-
-
 LOW_LEVEL_SENDKEYS_CLASS = "low-levelkeys-main"
     
 eg.RegisterPlugin(
@@ -53,7 +44,7 @@ eg.RegisterPlugin(
     description = (
         "Plugin to interface with low-level-sendkeys application."
     ),
-    canMultiLoad = True,
+    canMultiLoad = False,
     iconFile = "SendKeys",
 )
 
@@ -63,10 +54,6 @@ from hashlib import md5
 
 
 class Text:
-    host = "Host:"
-    port = "Port:"
-    tcpBox = "Low Level SendKeys TCP/IP Settings"
-#    securityBox = "Security"
     commandType = "Command Type:"
     command = "Command:"
     commandsMapSendKeys = "SENDKEYS"
@@ -77,11 +64,11 @@ class Text:
     
 #GlobalHandle = 0
 
-class LowLevelSendKeysNetworkSender(eg.PluginBase):
+class LowLevelSendKeys(eg.PluginBase):
     text = Text
 
     def __init__(self):
-        self.AddAction(Command)
+        self.AddAction(SendCommand)
         
         
     def __start__(self):
@@ -109,7 +96,7 @@ class LowLevelSendKeysNetworkSender(eg.PluginBase):
                 hinst, 
                 None
             )
-            print GlobalHandle        
+            #print GlobalHandle        
         except:
             if eg.debugLevel:
                 eg.PrintTraceback()
@@ -137,7 +124,7 @@ class LowLevelSendKeysNetworkSender(eg.PluginBase):
         
         return 1
    
-class Command(eg.ActionBase):
+class SendCommand(eg.ActionBase):
     name = "Send Command"
     mode = 0
 
@@ -149,7 +136,7 @@ class Command(eg.ActionBase):
         try:
             hwnd = FindWindow(None, LOW_LEVEL_SENDKEYS_CLASS)
         except:
-            self.plugin.TriggerEvent("LowLevelSendKeys_NotFound")
+            self.plugin.TriggerEvent("ServerNotFound")
             raise self.Exceptions.ProgramNotRunning
             
         cds = COPYDATASTRUCT()
@@ -170,9 +157,9 @@ class Command(eg.ActionBase):
 
         commandCtrl = panel.TextCtrl(message)
         
-        st1 = panel.StaticText(text.commandType)
-        st2 = panel.StaticText(text.command)
-        eg.EqualizeWidths((st1, st2))
+        #st1 = panel.StaticText(text.commandType)
+        #st2 = panel.StaticText(text.command)
+        #eg.EqualizeWidths((st1, st2))
 
         #box1 = panel.BoxedGroup(text.tcpBox, (st1, addrCtrl), (st2,portCtrl))
         #box2 = panel.BoxedGroup(text.securityBox, (st3, passwordCtrl))
