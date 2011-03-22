@@ -20,8 +20,6 @@ namespace low_level_sendkeys.Comunnication
             RestoreWindow,
             StartSocketServer,
             StopSocketServer,
-            StartEventGhostServer,
-            StopEventGhostServer,
             Quit,
             Help // Tem que ser sempre o maior valor do enum !!!
         };
@@ -53,8 +51,6 @@ namespace low_level_sendkeys.Comunnication
             CommandsMap["RESTOREWINDOW"] = Commands.RestoreWindow;
             CommandsMap["STARTSOCKETSERVER"] = Commands.StartSocketServer;
             CommandsMap["STOPSOCKETSERVER"] = Commands.StopSocketServer;
-            CommandsMap["STARTEVENTGHOSTSERVER"] = Commands.StartEventGhostServer;
-            CommandsMap["STOPEVENTGHOSTSERVER"] = Commands.StopSocketServer;
             CommandsMap["QUIT"] = Commands.Quit;
             CommandsMap["HELP"] = Commands.Help;
             CommandsMap["?"] = Commands.Help;

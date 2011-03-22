@@ -96,17 +96,6 @@ namespace low_level_sendkeys.Comunnication
             return sb.ToString();
         }
 
-        public static string StartEventGhostServer()
-        {
-            EventGhost.EventGhostConnection.StartEventGhostServer();
-            return ResponseOk;
-        }
-
-        public static string StopEventGhostServer()
-        {
-            EventGhost.EventGhostConnection.StopEventGhostServer();
-            return ResponseOk;
-        }
     }
 
 }

@@ -66,12 +66,6 @@ namespace low_level_sendkeys.Comunnication.Win32Api
                 case CommandMap.Commands.StopSocketServer:
                     e.Response = CommunicationBridge.StopSocketServer();
                     return;
-                case CommandMap.Commands.StartEventGhostServer:
-                    e.Response = CommunicationBridge.StartEventGhostServer();
-                    return;
-                case CommandMap.Commands.StopEventGhostServer:
-                    e.Response = CommunicationBridge.StopEventGhostServer();
-                    return;
                 default:
                     e.Response = CommunicationBridge.ResponseError + " Unknow command: " + tokens[0];
                     break;

@@ -19,13 +19,21 @@ namespace low_level_sendkeys
         private static readonly object LockSendKeys = new object();
         private static bool _executingCommands = false;
         private static int _interval = 5;
+        private static bool _discartBufferedKeys = true;
+
         public static void StartService()
         {
             string result = ConfigurationManager.AppSettings["MakeCodesInterval"];
+            string resultBufferedKeys = ConfigurationManager.AppSettings["DiscartBufferedKeys"];
             if (string.IsNullOrEmpty(result) || !int.TryParse(result, out _interval))
             {
                 _interval = 5;
             }
+            if (string.IsNullOrEmpty(resultBufferedKeys) || !bool.TryParse(result, out _discartBufferedKeys))
+            {
+                _discartBufferedKeys = true;
+            }
+
             keyboardManager.ListenKeyBoard();
         }
         public static void StopService()
@@ -135,6 +143,7 @@ namespace low_level_sendkeys
                   {
                       while (_executingCommands)
                       {
+                          if (_discartBufferedKeys) return;
                           Thread.Sleep(100);
                       }
                       _executingCommands = true;

@@ -60,12 +60,6 @@ namespace low_level_sendkeys.Comunnication.Sockets
                 case CommandMap.Commands.StopSocketServer:
                     return CommunicationBridge.StopSocketServer();
 
-                case CommandMap.Commands.StartEventGhostServer:
-                    return CommunicationBridge.StartEventGhostServer();
-
-                case CommandMap.Commands.StopEventGhostServer:
-                    return CommunicationBridge.StopEventGhostServer();
-
                 case CommandMap.Commands.Quit:
                     _socketWriter.WriteLine(CommunicationBridge.ResponseOk);
                     _socketWriter.Flush();

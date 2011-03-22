@@ -50,8 +50,6 @@
   <ItemGroup>
     <Compile Include="Comunnication\CommandLineOptions.cs" />
     <Compile Include="Comunnication\CommunicationBridge.cs" />
-    <Compile Include="Comunnication\EventGhost\EventGhostCommunication.cs" />
-    <Compile Include="Comunnication\EventGhost\EventGhostConnection.cs" />
     <Compile Include="Comunnication\Sockets\ClienteTcp.cs" />
     <Compile Include="Comunnication\CommandMap.cs" />
     <Compile Include="Comunnication\Sockets\MainSocket.cs" />
