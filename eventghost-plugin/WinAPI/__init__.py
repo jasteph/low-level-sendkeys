@@ -126,7 +126,6 @@ class LowLevelSendKeys(eg.PluginBase):
    
 class SendCommand(eg.ActionBase):
     name = "Send Command"
-    mode = 0
 
     def __call__(self, displayValue, type, message):
         if type=="": eg.PrintError("Message type must be set!")
@@ -153,7 +152,7 @@ class SendCommand(eg.ActionBase):
         #typeCtrl = panel.Choice(text.commandType, text.commandsMap)
         typeCtrl = wx.Choice(panel,-1,size=(200,-1))
         typeCtrl.AppendItems(strings=(text.commandsMapSendKeys,text.commandsMapSendMacro,text.commandsMapLoadFile,text.commandsMapSendToTray,text.commandsMapRestoreWindow))
-        typeCtrl.SetSelection(self.mode)
+        typeCtrl.SetStringSelection(type)
 
         commandCtrl = panel.TextCtrl(message)
         
@@ -180,10 +179,8 @@ class SendCommand(eg.ActionBase):
                 typeCtrl.GetStringSelection(),
                 commandCtrl.GetValue()
             )
-            self.mode = typeCtrl.GetSelection()
         
 #
 #self.combo2 = wx.ComboBox(self, -1, value=areaList[0], pos=wx.Point(150, 30),
 #
 #size=wx.Size(120, 150), choices=areaList)
-          
