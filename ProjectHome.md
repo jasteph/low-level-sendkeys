@@ -1,0 +1,1 @@
+This application can send simulated keystrokes at driver level, so applications that uses DirectInput in Raw Mode will receive the simulated keystrokes sent by this application.
